@@ -1,0 +1,51 @@
+Exception.py:
+from werkzeug.exceptions import HTTPException
+
+class LocNotFound(HTTPException):
+    code = 404
+    description = "No events found in this location"
+
+
+app1.py:
+from flask import Flask,render_template, request
+from exception import LocNotFound
+app = Flask(__name__)
+events_db=['delhi','mumbai','chennai']
+@app.route('/',methods=['GET','POST'])
+def home():
+    if request.method == 'POST':
+        city = request.form['city'].lower()
+        if city not in events_db:
+            raise LocNotFound()
+        return f"Events found in {city.title()}!"
+    return render_template('home.html')
+@app.errorhandler(LocNotFound)
+def handle_loc_not_found(error):
+    return render_template('error.html',error_message=error.description),error.code
+if __name__ == '__main__':
+    app.run(debug=True)
+
+home.html:
+<html>
+    <head>
+        <title> Find Events </title>
+    </head>
+    <body>
+        <h1> Search for events by city </h1>
+        <form method="POST">
+            <input type="text" name="city" placeholder="Enter the city name">
+            <button type="submit"> Search </button>
+        </form>
+    </body>
+</html>
+
+errors.html:
+<html>
+    <head>
+        <title> Error </title>
+    </head>
+    <body> 
+        <h2> Error: </h2>
+        <p> {{ error_message }} </p>
+    </body>
+</html>

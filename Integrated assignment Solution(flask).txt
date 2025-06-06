@@ -1,0 +1,332 @@
+import re
+
+from app import mysql
+
+
+def validate_admin(user_name, password):
+    cur=mysql.connect.cursor()
+    cur.execute("select *from admin_detail where uname=%s",(user_name,))
+    res=cur.fetchone()
+    if not res:
+        return 1
+    elif res['password']!=password:
+        return 2
+    else:
+        return 0
+
+
+
+def get_admin_name(user_name: str):
+    cur=mysql.connect.cursor()
+    cur.execute("select *from admin_detail where uname=%s",(user_name,))
+    res=cur.fetchone()
+    if not res:
+        return 1
+    else:
+        return res['uname']
+
+
+def validate_educator_details(user_name, name, password):
+    if not re.fullmatch(r"^\w{4,20}$",user_name):
+        return 1
+    if not re.fullmatch(r"^([A-Z][a-z]+)( [A-Z][a-z]+){1,2}$",name):
+        return 2
+    if not re.fullmatch(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%&])[A-Za-z\d@#$%&]{8,20}$",password):
+        return 3
+    return 0
+
+
+def add_educator_details(user_name, name, password):
+    code = validate_educator_details(user_name, name, password)
+    if code != 0:
+        return code
+
+    conn = mysql.connect
+    cursor = conn.cursor()
+    cursor.execute("select * from educator where uname = %s", (user_name,))
+    if cursor.fetchone():
+        return 4
+
+    cursor.execute("insert into educator (uname, name, password) values (%s, %s, %s)", (user_name, name, password))
+    conn.commit()
+    return 0
+
+def update_educator_details(edu_id, user_name, name, password):
+    code = validate_educator_details(user_name, name, password)
+    if code != 0:
+        return code
+    cur=mysql.connect.cursor()
+    cur.execute("select tid from educator where uname = %s and tid != %s", (user_name, edu_id))
+    if cur.fetchone():
+        return 4
+    cur.execute("select * from educator where tid = %s", (edu_id,))
+    if not cur.fetchone():
+        return 5
+    cur.execute("update educator set uname = %s, name = %s, password = %s where tid = %s",(user_name, name, password, edu_id))
+    mysql.connect.commit()
+    
+
+
+
+
+def get_students_on_status(status):
+    if status.lower() not in ['new', 'accepted', 'rejected']:
+        return []
+
+    cur = mysql.connect.cursor()
+    cur.execute("select aid, name, email, dob from applicant where lower(status)=%s", (status.lower(),))
+    res = cur.fetchall()
+    
+    if not res:
+        return []
+    
+    result = []
+    for row in res:
+        result.append({
+            'aid': row['aid'],
+            'name': row['name'],
+            'email': row['email'],
+            'dob': row['dob']
+        })
+    return result
+
+    
+        
+
+def update_application(application_id, action):
+    cur = mysql.connect.cursor()
+    cur.execute("select status from applicant WHERE aid=%s", (application_id,))
+    res = cur.fetchone()
+    
+    if not res or res['status'].lower() != "new":
+        return 1
+
+    if action.lower() not in ["accept", "reject"]:
+        return 2
+
+    new_status = "accepted" if action.lower() == "accept" else "rejected"
+    cur.execute("update applicant set status=%s where aid=%s", (new_status, application_id))
+    mysql.connect.commit()
+    
+    return 0
+
+
+
+def user_login(role, user_name, password):
+    cur = mysql.connect.cursor()
+    if role == "educator":
+        if not password:
+            return 1  
+        cur.execute("select * from educator where lower(uname) = %s", (user_name,))
+        educator = cur.fetchone()
+        if not educator:
+            return 2  
+
+        cur.execute("select * from educator where lower(uname) = %s and password = %s", (user_name, password))
+        educator = cur.fetchone()
+        if not educator:
+            return 3 
+        return educator['name']  
+
+    elif role == "student":
+        
+        
+        cur.execute("select * from applicant where email= %s", (user_name,))
+        student = cur.fetchone()
+        if not student:
+            return 4  
+
+        if student['status'] != "accepted":  
+            return 5  
+
+        return student['name']  
+
+    else:
+        return 6  
+
+
+
+def check_attendance():
+    cur = mysql.connect.cursor()
+    cur.execute("select * from attendance_log where ongoing = true")
+    attendance = cur.fetchone()
+    if attendance:
+        return True
+    return False
+
+
+
+def start_attendance(educator_id):
+    if check_attendance():
+        return 1  
+
+    cur = mysql.connect.cursor()
+    cur.execute("select * from attendance_log where started_by= %s and start_date = current_date()", (educator_id,))
+    existing = cur.fetchone()
+    if existing:
+        return 2 
+    cur.execute("insert into attendance_log (started_by, start_date, ongoing) values (%s, current_date(), true)", (educator_id,))
+    mysql.connect.commit()
+    return 0  
+
+
+
+def stop_attendance():
+    if not check_attendance():
+        return 1 
+
+    cur = mysql.connect.cursor()
+    cur.execute("update attendance_log set ongoing = false where ongoing = true")
+    mysql.connect.commit()
+    return 0  
+
+
+
+def get_attendance_list():
+    cur=mysql.connect.cursor()
+    query="""select a.attendance_id as aid, e.name as name, a.start_date as start_date
+        from attendance_log a
+        join educator e on a.started_by = e.tid
+        where a.ongoing = 0"""
+    cur.execute(query)
+    rows = cur.fetchall()
+    attendance_list = []
+    for row in rows:
+        attendance_list.append({
+            "attendance_id": row['aid'],
+            "educator_name": row['name'],
+            "start_date": row['start_date']
+        })
+    return attendance_list
+
+
+
+def get_students_attendance(attendance_id):
+    cur = mysql.connect.cursor()
+
+    cur.execute("select ongoing from attendance_log where attendance_id = %s", (attendance_id,))
+    result = cur.fetchone()
+
+    if result and result['ongoing'] == 1:
+        return 1
+
+    cur.execute("select aid, name from applicant where status = 'accepted'")
+    students = cur.fetchall()
+
+    cur.execute("select sid from marked_attendance where attendance_id = %s", (attendance_id,))
+    marked_result = cur.fetchall()
+    marked_ids = set([row['sid'] for row in marked_result])
+    print(marked_ids)
+
+    student_list = []
+    for student in students:
+        sid = student['aid']
+        status = 1 if sid in marked_ids else 0
+        student_list.append({'aid': student['aid'], 'name': student['name'], 'present': status})
+    print(student_list)   
+
+    return student_list
+
+
+
+
+
+def mark_attendance(student_id):
+    cur=mysql.connect.cursor()
+    cur.execute("select attendance_id from attendance_log where ongoing = 1")
+    result = cur.fetchone()
+    if not result:
+        return 1
+    attendance_id = result['attendance_id']
+    cur.execute("select * from marked_attendance where attendance_id = %s and sid = %s", (attendance_id, student_id))
+    if cur.fetchone():
+        return 2
+    cur.execute("insert into marked_attendance (attendance_id, sid) values (%s, %s)", (attendance_id, student_id))
+    mysql.connect.commit()
+    return 0
+
+
+
+def withdraw_application(email):
+    cur=mysql.connect.cursor()
+    cur.execute("select * from applicant where email=%s",(email,))
+    
+    res=cur.fetchone()
+    if not res:
+        return 1
+    aid=res['aid']
+    cur.execute("delete from marks where aid=%s",(aid,))
+    mysql.connect.commit()
+    cur.execute("delete from applicant where aid=%s",(aid,))
+    mysql.connect.commit()
+    return 0
+
+
+from flask_wtf import FlaskForm
+
+from wtforms import StringField, IntegerField
+from wtforms.validators import DataRequired, Email, Length, Regexp, NumberRange
+
+form_ampl.py
+==================================================
+
+
+class NewApplicationForm(FlaskForm):
+    email = StringField('Email', validators=[
+        DataRequired(),
+        Email(),
+        Length(max=50)
+    ])
+
+    name = StringField('Name', validators=[
+        DataRequired(),
+        Length(max=100)
+    ])
+
+    dob = StringField('Date of Birth', validators=[
+        DataRequired()
+    ])
+
+    guardian_name = StringField('Guardian Name', validators=[
+        DataRequired(),
+        Length(max=100)
+    ])
+
+    guardian_contact = StringField('Guardian Contact', validators=[
+        DataRequired(),
+        Regexp('^[6-9][0-9]{9}$', message="Enter a valid 10-digit phone number starting with 6, 7, 8, or 9")
+    ])
+
+    language1 = IntegerField('Language 1', validators=[
+        DataRequired(),
+        NumberRange(min=70, max=100)
+    ])
+
+    language2 = IntegerField('Language 2', validators=[
+        DataRequired(),
+        NumberRange(min=70, max=100)
+    ])
+
+    math = IntegerField('Math', validators=[
+        DataRequired(),
+        NumberRange(min=65, max=100)
+    ])
+
+    science = IntegerField('Science', validators=[
+        DataRequired(),
+        NumberRange(min=65, max=100)
+    ])
+
+    history = IntegerField('History', validators=[
+        DataRequired(),
+        NumberRange(min=50, max=100)
+    ])
+
+    geography = IntegerField('Geography', validators=[
+        DataRequired(),
+        NumberRange(min=50, max=100)
+    ])
+in utls.py
+====================
+from form import NewClassApplication
+naf=NewClassApplication()

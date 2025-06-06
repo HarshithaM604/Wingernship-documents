@@ -1,0 +1,121 @@
+> typeof(x)
+'undefined'
+> typeof(y)
+'number'
+> typeof(45.5)
+'number'
+> typeof('c')
+'string'
+> typeof("heihf")
+'string'
+> typeof(true)
+'boolean'
+> typeof([23,23,23])
+'object'
+
+number
+String
+boolean
+object
+undefined
+
++ - / * **(exponential) %
+> 10+20
+30
+> 10+'20'
+'1020'
+> 10+'20'+34
+'102034'
+> 10+'20'+34+"45"
+'10203445'
+> '20'+"45"
+'2045'
+> 10/0
+Infinity
+> 10/4
+2.5
+> 0/10
+0
+> 10*2
+20
+> 10**2
+100
+> 10**2**9
+Infinity
+> y=10
+10
+> x=y
+10
+> x==y
+true
+> x===y
+true
+> x=10
+10
+> y='10'
+'10'
+> x==y
+true
+> x===y
+false
+
+
+> n1="856"
+'856'
+> n2="856jpk"
+'856jpk'
+> n1==parseInt(n2)
+true
+> console.log(parseInt(n2))
+856
+undefined
+> n3="hhdhf456"
+'hhdhf456'
+> console.log(parseInt(n3))
+NaN
+undefined
+> 12.45%2.3
+0.9500000000000002
+> var x=10,y=20,z="30",p=12,f=2;
+undefined
+> console.log(x+y+z+p+f)
+3030122
+undefined
+> var v1=10
+undefined
+> var v2='10'
+undefined
+> (v1==v2)
+true
+> v1===v2
+false
+> console.log(eval("100+200"))
+300
+
+> console.log(myfon(10,20))
+200
+undefined
+> function myfon(){
+... console.log("Hello World")
+... }
+undefined
+> console.log(myfon(10,20))
+Hello World
+undefined
+undefined
+> console.log(myfon())
+Hello World
+undefined
+undefined
+> var x=[10,20,30]
+undefined
+> var y=new Array(10,20,30)
+undefined
+> typeof(x)
+'object'
+> typeof(y)
+'object'
+> x==y
+false
+> x===y
+false

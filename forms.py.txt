@@ -1,0 +1,94 @@
+forms.py:
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField,SubmitField, IntegerField,SelectField,RadioField,BooleanField 
+from wtforms.fields import EmailField                                                        
+from wtforms.validators import DataRequired,NumberRange,Email
+
+class LoginForm(FlaskForm):
+    username=StringField('Username', validators=[DataRequired()])
+    password=PasswordField('Password', validators=[DataRequired()])
+    age=IntegerField('Age',validators=[DataRequired(),NumberRange(min=18,max=60)])
+    email=EmailField('Email', validators=[DataRequired(),Email()])
+    role=SelectField('Role', choices=[('admin','Admin'),('user',"User"),('guest','Guest')])
+    gender=RadioField('Gender',choices=[('male',"Male"),('female',"Female"),('others','Others')])
+    accept_terms=BooleanField('I accept the Terms and Condition', validators=[DataRequired()])
+    submit=SubmitField('Login')
+
+app.py:
+from flask import Flask, render_template, request
+from forms import LoginForm
+from flask_wtf.csrf import CSRFProtect
+app=Flask(__name__)
+app.secret_key="Privatekey"
+csrf=CSRFProtect(app)
+
+@app.route('/',methods=['GET','POST'])
+def login():
+    form=LoginForm()
+    message=""
+    if form.validate_on_submit():
+        if form.username.data=="admin" and form.password.data=="password":
+            message=(
+                f"Login Successful<br>"
+                f"Username: {form.username.data}<br>"
+                f"Password: {form.password.data}<br>"
+                f"Age: {form.age.data}<br>"
+                f"Email: {form.email.data}<br>"
+                f"Role: {form.role.data}<br>"
+                f"Gender: {form.gender.data}<br>"
+                f"Accepted Terms: {'Yes' if form.accept_terms.data else 'No'}")
+        else:
+            message="Invalid Credential"
+    return render_template('login.html',login_form=form,message=message)
+if __name__=="__main__":
+    app.run(debug=True)
+
+
+login.html:
+<html>
+    <head>
+        <title> Login Page </title>
+    </head>
+    <body>
+        <h1> Login Form </h1>
+        <form method="POST" action="">
+            {{ login_form.csrf_token }}
+            <table>
+                <tr>
+                <td> {{ login_form.username.label}} </td>
+                <td> {{ login_form.username(size=20)}} </td>
+                </tr>
+                <tr>
+                    <td> {{ login_form.password.label}} </td>
+                    <td> {{ login_form.password(size=20)}} </td>
+                </tr>
+                <tr>
+                    <td> {{ login_form.age.label}} </td> 
+                    <td> {{ login_form.age()}} </td>
+                </tr>
+                <tr>
+                    <td> {{ login_form.email.label}} </td> 
+                    <td> {{ login_form.email()}} </td>
+                </tr>
+                <tr>
+                    <td> {{ login_form.role.label}} </td> 
+                    <td> {{ login_form.role()}} </td>
+                </tr>
+                <tr>
+                    <td> {{ login_form.gender.label}} </td> 
+                    <td> {{ login_form.gender()}} </td>
+                </tr>
+                <tr>
+                    <td colspan="2"> {{ login_form.accept_terms() }}  {{ login_form.accept_terms.label }} </td>
+                </tr>
+                <tr>
+                        <td colspan="2"> {{ login_form.submit() }}</td>
+                </tr>
+                </table>
+            </form>
+            {% if message %}
+                <p> {{ message|safe}} </p>
+            {% endif %}
+        </body>
+    </html>
+

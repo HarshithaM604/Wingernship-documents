@@ -1,0 +1,65 @@
+from app import mysql 
+
+def has_upcoming_expiry() -> bool: 
+    """ Return True if any product expires in the next 7 days. Return False otherwise. """ 
+    # Your code here return False # placeholder
+    cur=mysql.connection.cursor()
+    cur.execute("select count(*) as c from products where expiry_date between curdate() and curdate()+interval 7 day")
+    count = cur.fetchone()['c']
+    cur.close()
+    return count > 0
+
+def alter_table_if_needed():
+    """
+    Alter the 'products' table to add the 'status' column (if not exists).
+    The column 'status' should have a default value of 'active'.
+    """
+    
+    cur = mysql.connection.cursor()
+    cur.execute("""
+        select count(*) as c 
+        from information_schema.columns 
+        where table_name = 'products' and column_name = 'status'
+    """)
+    column_exists = cur.fetchone()['c']
+
+    if column_exists == 0:
+        cur.execute("alter table products add column status varchar(20) default 'active'")
+        mysql.connection.commit()
+        cur.close()
+
+    
+def mark_expired_products() -> int:
+    """
+    Update all products whose expiry_date is before today.
+    Set their status to 'expired'.
+    Return the number of products updated.
+    """
+    alter_table_if_needed()
+    cur = mysql.connection.cursor()
+    cur.execute("update products set status = 'expired' where expiry_date < curdate() AND status = 'active'")
+    mysql.connection.commit()
+    affected_rows = cur.rowcount
+    cur.close()
+    return affected_rows
+
+    
+def add_product(name,expiry_date):
+    cur=mysql.connection.cursor()
+    cur.execute("insert into products(name,expiry_date) values(%s,%s)",(name,expiry_date))
+    mysql.connection.commit()
+    cur.close()
+
+def view_product():
+    cur=mysql.connection.cursor()
+    cur.execute("select *from products")
+    res=cur.fetchall()
+    cur.close()
+    #mysql.connection.commit()
+    return res
+    
+def delete_product(id):
+    cur=mysql.connection.cursor()
+    cur.execute("delete from products where id=%s",(id,))
+    mysql.connection.commit()
+    cur.close()

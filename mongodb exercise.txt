@@ -1,0 +1,79 @@
+Exercise 1: Installation and configuration of MongoDB
+======================================================
+
+1. db.version()
+
+2. Suppose, the data path is /user/sahana_basavaraja/MongoDBPath
+   Then, the command to change the default data path is mongod --dbpath /user/sahana_basavaraja/MongoDBPath
+
+3. mongod --repair
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+Exercise 2: CRUD operations
+===========================
+
+1. db.product_catalog.find( { "categories.sub": "smartphones" }, {_id:0,prodname:1,price:1} )
+
+2. db.product_catalog.find( { $and: [ {"categories.sub": "washing machine" }, { price: { $gte: 10000, $lte: 20000 } } ] } ).sort( {prodname:1} )
+
+3. db.product_catalog.find( { $and: [ { manufacturer: {$in: ["apple","samsung"] } }, { price: {$lte:60000 } } ] } )
+
+4. db.product_catalog.find( { publisher:{ $regex:/^O'Reilly/i } } )
+
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+Exercise 3: SQL to MongoDB aggregation mapping chart
+=====================================================
+
+1. db.employee.aggregate( [
+   {
+     $group: {
+        _id: "$loc",
+        total: { $sum: "$salary" }
+     }
+   }
+] )
+
+
+2. db.employee.aggregate( [
+   {
+     $group: {
+        _id: "$loc",
+        count: { $sum: 1 }
+     }
+   },
+   { $match: { count: { $gt: 1 } } }
+] )
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+Exercise 5: Query and projection operators
+============================================
+
+1(1)	db.product_catalog.find( { publisher: {$ne:"Shroff"} } )
+
+1(2)	db.product_catalog.find( { $or: [ { price: {$gte:1000, $lte:20000} }, {manufacturer: { $in: [ "nike", "reebok" ] } } ] } ).pretty()
+
+2.	db.product_catalog.find( { "categories.main": "shoes", colors:{ $size:2 } } )
+
+3.	db.product_catalog.remove( { "categories.main": "books", ISBN: { $nin: [2323232,1979891] } } )
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+Exercise 6: Update operators
+==============================
+
+1.	db.product_catalog.updateMany( {colors:'black'}, { $set:{ 'colors.$': 'jet black' } } )
+
+2.	db.product_catalog.update({prodname:"iphone 7"},{ $currentDate:{date_of_launch:true}})
+
+3.	db.product_catalog.updateMany({},{$rename:{"prodname":"productname"}})
+
+4.	db.product_catalog.updateMany( {manufacturer:"nike"}, {$push:{colors:{$each:["red","purple"],$position:0} } } )
+
+------------------------------------------------------------------------------------------------------------------------------------

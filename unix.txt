@@ -1,0 +1,153 @@
+Unix 1960s-70s AT&T Bell Labs
+and Linux 1990s Linus
+
+Kernel
+
+
+Unix -> proprietory - MacOS
+Linux -> Open source - android
+
+file
+directory
+
+filesystem
+
+absolute path 
+
+relative path
+
+
+Basic commands
+---------------
+
+1. ls -
+
+-l Long listing (permissions, owner, group, size,  last modified time)
+
+-R recursive
+
+-r reverse
+
+-a list all the files(including hidden files and directories)
+
+
+2. cd - change directory 
+
+cd [Absolute or Relative path]
+
+3. pwd - present working directory
+gives the absolute path of current active directory
+
+4. mkdir - create empty new directories
+
+5. rmdir - can remove only empty directories
+
+6. rm - remove files and non-empty directories
+
+-r Recursive
+-f forceful
+-i interactive
+
+7. cat 
+
+	- read from file
+	cat filename
+	- read from multiple files
+	cat file1 file2 
+	- write into files
+	
+STDIN, STDOUT, FILE
+
+by default, cat takes input from STDIN and gives output to STDOUT
+
+
+Input/Output redirection
+------------------------
+
+cat file1 > outfile
+
+read the contents from file1 and write into outfile
+
+If outfile is not present already, it will be newly created. 
+If it is already present, and has some content, it will be overwritten
+
+cat >> outfile
+
+>> is used to append to previously present content of the file
+
+touch command - 
+
+touch file1 file2 
+1. create empty files
+2. modifies the last mtime of file without making changes to the content of the file
+
+
+ls -l 
+mtime - changes to the content of file
+atime - read the content of file
+ctime - change in meta data of the file
+btime - time of creation
+
+atime - relatime, noatime, strictatime
+
+
+etl
+
+pipelining
+----------
+
+stage 1 | stage2 | stage3 
+
+
+head
+tail
+cut
+paste
+comm 	cmp
+diff
+sort
+uniq
+rev
+tr
+wc
+
+
+cat educators
+Noumya
+Pragya
+Tanya
+
+cat trainees
+Noumya
+Shivani
+
+comm trainees educators
+                Noumya
+        Pragya
+Shivani
+        Tanya
+		
+		
+comm file1 file2
+
+3 columns in o/p
+1st column - lines unique in file1
+2nd column - lines unique in file2
+3rd column - common lines
+
+		
+pattern		
+"a."
+
+ai
+
+
+aaaaaa
+
+dfdkj
+
+[0-9]
+
+[A-Z] [a-z] [a-e]
+
+[aeiou]
