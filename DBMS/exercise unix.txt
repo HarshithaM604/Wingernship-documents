@@ -1,0 +1,279 @@
+egrep "^\d{2}.\d{3}.\d{2}.\d{2} - [A-Za-z0-9]+ \[\d{2}:\d{2}:\d{2}\] \"[a-zA-Z /0-9.]+\" 200 \d+$" access.log
+
+
+exercise
+
+egrep "^[0-9]{6}#[A-Z][a-z]{5,}" employee
+
+egrep "^[[:digit:]]{6}#[A-Z][a-z]{6,}" employee
+egrep "(0\.5)|(1\.5)$" employee
+
+
+curl -O http://10.208.80.37/~OSTALL_D/OStall.exe
+
+egrep "(ap){2,}$" fruits
+
+egrep -c "9" demo--to count numer of patterns matched
+
+grep '200' apache_access.log | grep -iE "mobile|Laptop" 
+
+[tr582693@cvreros1 ~]$ ls
+access.log  colors  dir2       empdata   file2  file6  fruits   numbers     patternfile  sample     trainee
+Brands_new  demo    dnew       employee  file4  file7  names    output      practice     tempfile
+Brands_old  dir1    educators  file1     file5  fnew   newfile  outputfile  public_html  templates
+[tr582693@cvreros1 ~]$ cd practice
+[tr582693@cvreros1 practice]$ ls
+samples_backup.tar  samplesdir
+[tr582693@cvreros1 practice]$ rm samples_backup.tar
+[tr582693@cvreros1 practice]$ ls
+samplesdir
+[tr582693@cvreros1 practice]$ tar -cvf samples_backup.tar samplesdir
+samplesdir/
+samplesdir/sample1
+samplesdir/sample2
+samplesdir/sample3/
+samplesdir/sample4/
+[tr582693@cvreros1 practice]$ cd samplesdir
+[tr582693@cvreros1 samplesdir]$ cat sample1
+/home/er111/Unix_Course/backup_directory/
+/home/er111/Unix_Course/backup_directory/application_files.tar.gz
+/home/er111/Unix_Course/backup_directory/Registration.dat.gz
+/home/er111/Unix_Course/backup_directory/web_access_log_
+/home/er111/Unix_Course/backup_directory/web_access_log_.log
+/home/er111/Unix_Course/backup_directory/file2
+/home/er111/Unix_Course/backup_directory/Registration.dat~
+/home/er111/Unix_Course/backup_directory/ratings.dat.gz
+/home/er111/Unix_Course/backup_directory/Registration.dat
+/home/er111/Unix_Course/backup_directory/ratings.dat
+/home/er111/Unix_Course/backup_directory/app_access_log.dat.gz
+/home/er111/Unix_Course/backup_directory/file1
+/home/er111/Unix_Course/backup_directory/application_log.log
+/home/er111/Unix_Course/backup_directory/web_access_log_20170801.log
+/home/er111/Unix_Course/backup_directory/product.dat.gz
+/home/er111/Unix_Course/backup_directory/web_access_log.log
+/home/er111/Unix_Course/backup_directory/Registration.dat~.gz
+[tr582693@cvreros1 samplesdir]$ cat samples2
+cat: samples2: No such file or directory
+[tr582693@cvreros1 samplesdir]$ cat sample2
+egrep "^\d{2}.\d{3}.\d{2}.\d{2} - [A-Za-z0-9]+ \[\d{2}:\d{2}:\d{2}\] \"[a-zA-Z /0-9.]+\" 200 \d+$" access.log
+
+
+exercise
+
+egrep "^[0-9]{6}#[A-Z][a-z]{5,}" employee
+
+egrep "^[[:digit:]]{6}#[A-Z][a-z]{6,}" employee
+egrep "(0\.5)|(1\.5)$" employee
+
+
+curl -O http://10.208.80.37/~OSTALL_D/OStall.exe
+
+egrep "(ap){2,}$" fruits
+
+egrep -c "9" demo--to count numer of patterns matched
+
+grep '200' apache_access.log | grep -iE "mobile|Laptop"
+
+[tr582693@cvreros1 samplesdir]$ cd ..
+[tr582693@cvreros1 practice]$ tar -cvf application_files.tar samplesdir
+samplesdir/
+samplesdir/sample1
+samplesdir/sample2
+samplesdir/sample3/
+samplesdir/sample4/
+[tr582693@cvreros1 practice]$ ls
+application_files.tar  samples_backup.tar  samplesdir
+[tr582693@cvreros1 practice]$ rm sample_backup.tar
+rm: cannot remove 'sample_backup.tar': No such file or directory
+[tr582693@cvreros1 practice]$ rm samples_backup.tar
+[tr582693@cvreros1 practice]$ ls
+application_files.tar  samplesdir
+[tr582693@cvreros1 practice]$ ls -l
+total 12
+-rw-rw-r--. 1 tr582693 tr582693 10240 Mar  5 16:04 application_files.tar
+drwxrwxr-x. 4 tr582693 tr582693    66 Mar  5 15:41 samplesdir
+[tr582693@cvreros1 practice]$ cd ..
+[tr582693@cvreros1 ~]$ ls
+access.log  colors  dir2       empdata   file2  file6  fruits   numbers     patternfile  sample     trainee
+Brands_new  demo    dnew       employee  file4  file7  names    output      practice     tempfile
+Brands_old  dir1    educators  file1     file5  fnew   newfile  outputfile  public_html  templates
+[tr582693@cvreros1 ~]$ cd practice
+[tr582693@cvreros1 practice]$ cat > sample3
+Hi
+Hello
+[tr582693@cvreros1 practice]$ cat > sample4
+hello
+Hi^C
+[tr582693@cvreros1 practice]$ cat > sample4
+hi
+helloooooo
+[tr582693@cvreros1 practice]$ ls
+application_files.tar  sample3  sample4  samplesdir
+[tr582693@cvreros1 practice]$ tar -cvzf all_application_files.tar sample3 sample4
+sample3
+sample4
+[tr582693@cvreros1 practice]$ ls -l
+total 24
+-rw-rw-r--. 1 tr582693 tr582693   166 Mar  5 16:08 all_application_files.tar
+-rw-rw-r--. 1 tr582693 tr582693 10240 Mar  5 16:04 application_files.tar
+-rw-rw-r--. 1 tr582693 tr582693    10 Mar  5 16:07 sample3
+-rw-rw-r--. 1 tr582693 tr582693    14 Mar  5 16:07 sample4
+drwxrwxr-x. 4 tr582693 tr582693    66 Mar  5 15:41 samplesdir
+[tr582693@cvreros1 practice]$ tar -xvzf all_application_files.tar
+sample3
+sample4
+[tr582693@cvreros1 practice]$ tar -xvzf all_application_files.tar
+sample3
+sample4
+[tr582693@cvreros1 practice]$ tar -tvf application_files.tar
+drwxrwxr-x tr582693/tr582693 0 2025-03-05 15:41 samplesdir/
+-rw-rw-r-- tr582693/tr582693 978 2025-03-05 15:11 samplesdir/sample1
+-rw-rw-r-- tr582693/tr582693 436 2025-03-05 15:11 samplesdir/sample2
+drwxrwxr-x tr582693/tr582693   0 2025-03-05 15:41 samplesdir/sample3/
+drwxrwxr-x tr582693/tr582693   0 2025-03-05 15:41 samplesdir/sample4/
+[tr582693@cvreros1 practice]$ tar -tvzf all_application_files.tar
+-rw-rw-r-- tr582693/tr582693 10 2025-03-05 16:07 sample3
+-rw-rw-r-- tr582693/tr582693 14 2025-03-05 16:07 sample4
+[tr582693@cvreros1 practice]$ cat > sample5
+latha
+harshitha
+mansasdhdjh
+[tr582693@cvreros1 practice]$ ls
+all_application_files.tar  application_files.tar  sample3  sample4  sample5  samplesdir
+[tr582693@cvreros1 practice]$ tar -rvf application_files.tar sample5
+sample5
+[tr582693@cvreros1 practice]$ tar -tvf application_files.tar
+drwxrwxr-x tr582693/tr582693 0 2025-03-05 15:41 samplesdir/
+-rw-rw-r-- tr582693/tr582693 978 2025-03-05 15:11 samplesdir/sample1
+-rw-rw-r-- tr582693/tr582693 436 2025-03-05 15:11 samplesdir/sample2
+drwxrwxr-x tr582693/tr582693   0 2025-03-05 15:41 samplesdir/sample3/
+drwxrwxr-x tr582693/tr582693   0 2025-03-05 15:41 samplesdir/sample4/
+-rw-rw-r-- tr582693/tr582693  28 2025-03-05 16:15 sample5
+[tr582693@cvreros1 practice]$ cd ..
+[tr582693@cvreros1 ~]$ mkdir archivefiles
+[tr582693@cvreros1 ~]$ cd archivefiles
+[tr582693@cvreros1 archivefiles]$ cat > sample1
+Hi
+[tr582693@cvreros1 archivefiles]$ cat > sample2.dat
+hello
+[tr582693@cvreros1 archivefiles]$ cat > sample3.dat
+hdbcnbdh
+[tr582693@cvreros1 archivefiles]$ cat > sample4.dat
+ksdhwudhfjd
+[tr582693@cvreros1 archivefiles]$ ls
+sample1  sample2.dat  sample3.dat  sample4.dat
+[tr582693@cvreros1 archivefiles]$ ls |cpio -ov > all_application_files.cpio
+all_application_files.cpio
+sample1
+sample2.dat
+sample3.dat
+sample4.dat
+1 block
+[tr582693@cvreros1 archivefiles]$ rm all_application_files.cpio
+[tr582693@cvreros1 archivefiles]$ ls
+sample1  sample2.dat  sample3.dat  sample4.dat
+[tr582693@cvreros1 archivefiles]$ cd ..
+[tr582693@cvreros1 ~]$ cd archivefiles
+[tr582693@cvreros1 archivefiles]$ ls |cpio -ov > all_application_files.cpio
+all_application_files.cpio
+sample1
+sample2.dat
+sample3.dat
+sample4.dat
+1 block
+[tr582693@cvreros1 archivefiles]$ cpio -idv < ./all_application_files.cpio
+cpio: all_application_files.cpio not created: newer or same age version exists
+all_application_files.cpio
+cpio: sample1 not created: newer or same age version exists
+sample1
+cpio: sample2.dat not created: newer or same age version exists
+sample2.dat
+cpio: sample3.dat not created: newer or same age version exists
+sample3.dat
+cpio: sample4.dat not created: newer or same age version exists
+sample4.dat
+1 block
+[tr582693@cvreros1 archivefiles]$ ls |cpio -ov -H tar -F tar_archive_of_all_application_files.tar
+all_application_files.cpio
+sample1
+sample2.dat
+sample3.dat
+sample4.dat
+cpio: File tar_archive_of_all_application_files.tar grew, 5120 new bytes not copied
+tar_archive_of_all_application_files.tar
+22 blocks
+[tr582693@cvreros1 archivefiles]$ cpio -it -F tar_archive_of_all_application_files.tar
+all_application_files.cpio
+sample1
+sample2.dat
+sample3.dat
+sample4.dat
+tar_archive_of_all_application_files.tar
+21 blocks
+[tr582693@cvreros1 archivefiles]$ cpio -idv -F ./../tar_archive_of_all_application_files.tar
+cpio: Cannot open ./../tar_archive_of_all_application_files.tar: No such file or directory
+[tr582693@cvreros1 archivefiles]$ cpio -idv -F ./tar_archive_of_all_application_files.tar
+cpio: all_application_files.cpio not created: newer or same age version exists
+all_application_files.cpio
+cpio: sample1 not created: newer or same age version exists
+sample1
+cpio: sample2.dat not created: newer or same age version exists
+sample2.dat
+cpio: sample3.dat not created: newer or same age version exists
+sample3.dat
+cpio: sample4.dat not created: newer or same age version exists
+sample4.dat
+cpio: tar_archive_of_all_application_files.tar not created: newer or same age version exists
+tar_archive_of_all_application_files.tar
+21 blocks
+[tr582693@cvreros1 archivefiles]$ cat > myfile.txt
+hshqydghbdjxhcjshxjshdjs
+[tr582693@cvreros1 archivefiles]$ gzip -k myfile.txt
+[tr582693@cvreros1 archivefiles]$ rm myfile.txt
+[tr582693@cvreros1 archivefiles]$ cd ..
+[tr582693@cvreros1 ~]$ cat > myfile.txt
+hduihjwbdchwyehduweh
+[tr582693@cvreros1 ~]$ gzip -k myfile.txt
+[tr582693@cvreros1 ~]$ gunzip -k myfile.txt.gz
+gzip: myfile.txt already exists; do you wish to overwrite (y or n)? y
+[tr582693@cvreros1 ~]$ ls
+access.log    Brands_old  dir1  educators  file1  file5  fnew        myfile.txt.gz  numbers     patternfile  sample     trainee
+archivefiles  colors      dir2  empdata    file2  file6  fruits      names          output      practice     tempfile
+Brands_new    demo        dnew  employee   file4  file7  myfile.txt  newfile        outputfile  public_html  templates
+[tr582693@cvreros1 ~]$ ls -l
+total 100
+-rw-rw-r--. 1 tr582693 tr582693 1033 Mar  5 10:00 access.log
+drwxrwxr-x. 2 tr582693 tr582693  181 Mar  5 16:28 archivefiles
+-rw-rw-r--. 1 tr582693 tr582693   45 Mar  4 20:54 Brands_new
+-rw-rw-r--. 1 tr582693 tr582693   56 Mar  4 20:53 Brands_old
+-rw-rw---x. 1 tr582693 tr582693   17 Mar  4 11:54 colors
+-rw-r--r--. 1 tr582693 tr582693   30 Mar  5 11:53 demo
+drwxr-x--x. 2 tr582693 tr582693   60 Mar  5 11:21 dir1
+drwxr-x--x. 2 tr582693 tr582693   60 Mar  5 14:32 dir2
+drwxrwxrwx. 2 tr582693 tr582693    6 Mar  5 11:33 dnew
+-rw-rw-r--. 1 tr582693 tr582693   22 Mar  5 09:35 educators
+-rw-rw-r--. 1 tr582693 tr582693  397 Mar  5 12:30 empdata
+-rw-rw-r--. 1 tr582693 tr582693  281 Mar  5 10:04 employee
+-rw-rw---x. 1 tr582693 tr582693    8 Mar  5 15:04 file1
+-rw-rw---x. 1 tr582693 tr582693   40 Mar  5 14:36 file2
+-rw-rw---x. 1 tr582693 tr582693   40 Mar  5 14:18 file4
+-rw-rw---x. 1 tr582693 tr582693   40 Mar  5 14:21 file5
+-rw-rw---x. 1 tr582693 tr582693   40 Mar  5 14:25 file6
+-rw-rw---x. 1 tr582693 tr582693   40 Mar  5 14:38 file7
+-rw-rw-rw-. 1 tr582693 tr582693    0 Mar  5 11:33 fnew
+-rw-rw-r--. 1 tr582693 tr582693   18 Mar  5 11:58 fruits
+-rw-rw-r--. 1 tr582693 tr582693   21 Mar  5 16:29 myfile.txt
+-rw-rw-r--. 1 tr582693 tr582693   52 Mar  5 16:29 myfile.txt.gz
+-rw-rw---x. 1 tr582693 tr582693   20 Mar  4 11:50 names
+-rw-rw---x. 1 tr582693 tr582693   21 Mar  4 11:31 newfile
+-rw-rw---x. 1 tr582693 tr582693    0 Mar  4 12:02 numbers
+-rw-rw-r--. 1 tr582693 tr582693   20 Mar  4 20:10 output
+-rw-rw---x. 1 tr582693 tr582693   27 Mar  4 11:58 outputfile
+-rw-rw-r--. 1 tr582693 tr582693    7 Mar  5 12:03 patternfile
+drwxrwxr-x. 3 tr582693 tr582693  131 Mar  5 16:15 practice
+drwsrws-wt. 2 root     apache     23 Mar  4 05:19 public_html
+-rw-rw-r--. 1 tr582693 tr582693   63 Mar  5 09:50 sample
+-rw-rw---x. 1 tr582693 tr582693   22 Mar  4 11:59 tempfile
+drwxrwxr-x. 2 tr582693 tr582693    6 Mar  5 14:17 templates
+-rw-rw-r--. 1 tr582693 tr582693   26 Mar  5 09:36 trainee
+
