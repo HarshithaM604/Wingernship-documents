@@ -1,0 +1,648 @@
+Advanced Unix:
+https://lex.infosysapps.com/web/en/app/toc/lex_auth_0126350006109634564740/overview
+Introduction to Unix:
+https://lex.infosysapps.com/en/app/toc/lex_auth_01265419704839372873/overview
+Unix Playground:
+https://lex.infosysapps.com/en/app/toc/lex_auth_012761083203747840518/overview
+JSLinux:
+https://bellard.org/jslinux/vm.html?cpu=riscv64&url=fedora33-riscv.cfg&mem=256
+---------------------------------------------------------------------------------------
+Solaris - offered by sun 
+Linux - offered by redhat 
+fedora,centos,khali ,ubuntu 
+service /systemctl 
+shell-ksh/csh/sh/bash
+
+Basic Commands:
+ls - listing all the contents
+ls -a - show hidden files 
+.bash_profile 
+.bash_rc
+ls -l / ll / ls -lrt  long listing 
+[er1118220@BL1UL056 public_html]$ ls
+ActInfo        class2.php  d3.html       demo.php      emp.txt       my.sh        prpare.php      Testing
+Advanced_Unix  class3.php  Day1          demo.sql      ep.sh         names.txt    sampledata.txt  trans.php
+a.sql          cust1.txt   debugging.sh  dem.php       err.php       now.html     Sample.txt      Unix_Lex
+autoload.php   custInfo    debug.sh      echo          file1.sh      Panasonic    see.sh          Unix_Sep19
+backup.sql     cust_mail   def.php       emp           file.html     parent.php   s.php
+book.sql       cust_name   dem.html      Employee.php  function1.sh  pattern.php  style.css
+b.sql          cust.txt    demo19_6      employee.txt  function.sh   p.php        temp1
+class1.php     d2.html     demo.html     emp_tab.sql   h.sh          preg.php     Test
+[er1118220@BL1UL056 public_html]$ ll
+total 228
+-rw-rw-r--. 1 er1118220 apache    48 May 16 14:54 ActInfo
+drwxrwsr-x. 5 er1118220 apache  4096 Sep 22 12:31 Advanced_Unix
+-rw-rw-r--. 1 er1118220 apache     0 Apr 21 15:14 a.sql
+-rw-rw-r--. 1 er1118220 apache   116 Dec 29  2021 autoload.php
+-rw-rw-r--. 1 er1118220 apache     0 Feb 24  2022 backup.sql
+-rw-rw-r--. 1 er1118220 apache     0 Apr 20 12:37 book.sql
+-rw-rw-r--. 1 er1118220 apache  2581 Apr 21 15:45 b.sql
+-rw-rw-r--. 1 er1118220 apache    73 Dec 29  2021 class1.php
+-rw-rw-r--. 1 er1118220 apache    89 Dec 29  2021 class2.php
+-rw-rw-r--. 1 er1118220 apache    68 Dec 29  2021 class3.php
+-rw-rw-r--. 1 er1118220 apache    22 Jan 11  2022 cust1.txt
+-rw-rw-r--. 1 er1118220 apache    63 May 16 14:51 custInfo
+-rw-rw-r--. 1 er1118220 apache    16 Jan 10  2022 cust_mail
+-rw-rw-r--. 1 er1118220 apache    28 Jan 11  2022 cust_name
+-rw-rw-r--. 1 er1118220 apache     7 Jan  8  2022 cust.txt
+-rw-rw-r--. 1 er1118220 apache   857 Dec 29  2021 d2.html
+-rw-rw-r--. 1 er1118220 apache   858 Dec 29  2021 d3.html
+drwxrwsr-x. 3 er1118220 apache  4096 Jun 23 11:40 Day1
+-rw-rw-r--. 1 er1118220 apache    96 May  4 14:58 debugging.sh
+-rw-rw-r--. 1 er1118220 apache   103 May  4 10:53 debug.sh
+-rw-rw-r--. 1 er1118220 apache   170 Dec 29  2021 def.php
+-rw-rw-r--. 1 er1118220 apache  1323 Dec 29  2021 dem.html
+-rw-rw-r--. 1 er1118220 apache    57 Jun 19 12:43 demo19_6
+-rw-rw-r--. 1 er1118220 apache   217 Dec 29  2021 demo.html
+-rw-rw-r--. 1 er1118220 apache   113 Jan  7  2022 demo.php
+-rw-r--r--. 1 er1118220 apache    18 Dec 29  2021 demo.sql
+-rw-rw-r--. 1 er1118220 apache   154 Dec 29  2021 dem.php
+-rw-r--r--. 1 er1118220 apache     0 Dec 29  2021 echo
+-rw-r--r--. 1 er1118220 apache    41 Dec 29  2021 emp
+-rw-rw-r--. 1 er1118220 apache   107 Dec 29  2021 Employee.php
+-rw-rw-r--. 1 er1118220 apache   245 May 16 16:20 employee.txt
+-rw-rw-r--. 1 er1118220 apache 17146 Aug  3 14:52 emp_tab.sql
+-rw-rw-r--. 1 er1118220 apache   244 May  2 16:29 emp.txt
+-rw-rw-r--. 1 er1118220 apache   102 Jan  8  2022 ep.sh
+-rw-rw-r--. 1 er1118220 apache   232 Dec 29  2021 err.php
+-rw-rw-r--. 1 er1118220 apache   130 Sep 19 19:13 file1.sh
+-rw-rw-r--. 1 er1118220 apache    52 Dec 29  2021 file.html
+-rw-rw-r--. 1 er1118220 apache   168 Jan  8  2022 function1.sh
+-rw-rw-r--. 1 er1118220 apache    78 Jan  8  2022 function.sh
+-rw-rw-r--. 1 er1118220 apache    13 Jan  8  2022 h.sh
+-rw-rw-r--. 1 er1118220 apache   148 Jan  8  2022 my.sh
+-rw-rw-r--. 1 er1118220 apache    41 Jan  8  2022 names.txt
+-rw-rw-r--. 1 er1118220 apache   251 Dec 29  2021 now.html
+drwxrwsr-x. 3 er1118220 apache  4096 Aug 26 10:56 Panasonic
+-rw-rw-r--. 1 er1118220 apache    94 Dec 29  2021 parent.php
+-rw-rw-r--. 1 er1118220 apache   180 Dec 29  2021 pattern.php
+-rw-rw-r--. 1 er1118220 apache   264 Dec 29  2021 p.php
+-rw-rw-r--. 1 er1118220 apache   148 Dec 29  2021 preg.php
+-rw-rw-r--. 1 er1118220 apache   408 Dec 29  2021 prpare.php
+-rw-rw-r--. 1 er1118220 apache   348 May 16 16:14 sampledata.txt
+-rw-rw-r--. 1 er1118220 apache   113 May 16 14:49 Sample.txt
+-rw-rw-r--. 1 er1118220 apache   645 Jan 11  2022 see.sh
+-rw-rw-r--. 1 er1118220 apache   106 Dec 29  2021 s.php
+-rw-rw-r--. 1 er1118220 apache    23 Dec 29  2021 style.css
+-rw-rw-r--. 1 er1118220 apache   111 May 16 14:57 temp1
+drwxr-xr-x. 6 er1118220 apache   251 Aug 23 16:37 Test
+drwxrwsr-x. 3 er1118220 apache    22 Jul 15 12:27 Testing
+-rw-rw-r--. 1 er1118220 apache   241 Dec 29  2021 trans.php
+drwxr-xr-x. 4 er1118220 apache   224 Sep  5 14:40 Unix_Lex
+drwxrwxr-x. 2 er1118220 apache  4096 Sep 22 12:42 Unix_Sep19
+[er1118220@BL1UL056 public_html]$ ls -lrt
+total 228
+-rw-r--r--. 1 er1118220 apache    18 Dec 29  2021 demo.sql
+-rw-r--r--. 1 er1118220 apache     0 Dec 29  2021 echo
+-rw-r--r--. 1 er1118220 apache    41 Dec 29  2021 emp
+-rw-rw-r--. 1 er1118220 apache    94 Dec 29  2021 parent.php
+-rw-rw-r--. 1 er1118220 apache   154 Dec 29  2021 dem.php
+-rw-rw-r--. 1 er1118220 apache   264 Dec 29  2021 p.php
+-rw-rw-r--. 1 er1118220 apache   241 Dec 29  2021 trans.php
+-rw-rw-r--. 1 er1118220 apache   148 Dec 29  2021 preg.php
+-rw-rw-r--. 1 er1118220 apache   180 Dec 29  2021 pattern.php
+-rw-rw-r--. 1 er1118220 apache   217 Dec 29  2021 demo.html
+-rw-rw-r--. 1 er1118220 apache   857 Dec 29  2021 d2.html
+-rw-rw-r--. 1 er1118220 apache   251 Dec 29  2021 now.html
+-rw-rw-r--. 1 er1118220 apache   107 Dec 29  2021 Employee.php
+-rw-rw-r--. 1 er1118220 apache   116 Dec 29  2021 autoload.php
+-rw-rw-r--. 1 er1118220 apache    73 Dec 29  2021 class1.php
+-rw-rw-r--. 1 er1118220 apache    89 Dec 29  2021 class2.php
+-rw-rw-r--. 1 er1118220 apache    68 Dec 29  2021 class3.php
+-rw-rw-r--. 1 er1118220 apache   408 Dec 29  2021 prpare.php
+-rw-rw-r--. 1 er1118220 apache   106 Dec 29  2021 s.php
+-rw-rw-r--. 1 er1118220 apache   232 Dec 29  2021 err.php
+-rw-rw-r--. 1 er1118220 apache   170 Dec 29  2021 def.php
+-rw-rw-r--. 1 er1118220 apache  1323 Dec 29  2021 dem.html
+-rw-rw-r--. 1 er1118220 apache    52 Dec 29  2021 file.html
+-rw-rw-r--. 1 er1118220 apache   858 Dec 29  2021 d3.html
+-rw-rw-r--. 1 er1118220 apache    23 Dec 29  2021 style.css
+-rw-rw-r--. 1 er1118220 apache   113 Jan  7  2022 demo.php
+-rw-rw-r--. 1 er1118220 apache    78 Jan  8  2022 function.sh
+-rw-rw-r--. 1 er1118220 apache   168 Jan  8  2022 function1.sh
+-rw-rw-r--. 1 er1118220 apache   102 Jan  8  2022 ep.sh
+-rw-rw-r--. 1 er1118220 apache   148 Jan  8  2022 my.sh
+-rw-rw-r--. 1 er1118220 apache    41 Jan  8  2022 names.txt
+-rw-rw-r--. 1 er1118220 apache     7 Jan  8  2022 cust.txt
+-rw-rw-r--. 1 er1118220 apache    13 Jan  8  2022 h.sh
+-rw-rw-r--. 1 er1118220 apache    16 Jan 10  2022 cust_mail
+-rw-rw-r--. 1 er1118220 apache    22 Jan 11  2022 cust1.txt
+-rw-rw-r--. 1 er1118220 apache    28 Jan 11  2022 cust_name
+-rw-rw-r--. 1 er1118220 apache   645 Jan 11  2022 see.sh
+-rw-rw-r--. 1 er1118220 apache     0 Feb 24  2022 backup.sql
+-rw-rw-r--. 1 er1118220 apache     0 Apr 20 12:37 book.sql
+-rw-rw-r--. 1 er1118220 apache     0 Apr 21 15:14 a.sql
+-rw-rw-r--. 1 er1118220 apache  2581 Apr 21 15:45 b.sql
+-rw-rw-r--. 1 er1118220 apache   244 May  2 16:29 emp.txt
+-rw-rw-r--. 1 er1118220 apache   103 May  4 10:53 debug.sh
+-rw-rw-r--. 1 er1118220 apache    96 May  4 14:58 debugging.sh
+-rw-rw-r--. 1 er1118220 apache   113 May 16 14:49 Sample.txt
+-rw-rw-r--. 1 er1118220 apache    63 May 16 14:51 custInfo
+-rw-rw-r--. 1 er1118220 apache    48 May 16 14:54 ActInfo
+-rw-rw-r--. 1 er1118220 apache   111 May 16 14:57 temp1
+-rw-rw-r--. 1 er1118220 apache   348 May 16 16:14 sampledata.txt
+-rw-rw-r--. 1 er1118220 apache   245 May 16 16:20 employee.txt
+-rw-rw-r--. 1 er1118220 apache    57 Jun 19 12:43 demo19_6
+drwxrwsr-x. 3 er1118220 apache  4096 Jun 23 11:40 Day1
+drwxrwsr-x. 3 er1118220 apache    22 Jul 15 12:27 Testing
+-rw-rw-r--. 1 er1118220 apache 17146 Aug  3 14:52 emp_tab.sql
+drwxr-xr-x. 6 er1118220 apache   251 Aug 23 16:37 Test
+drwxrwsr-x. 3 er1118220 apache  4096 Aug 26 10:56 Panasonic
+drwxr-xr-x. 4 er1118220 apache   224 Sep  5 14:40 Unix_Lex
+-rw-rw-r--. 1 er1118220 apache   130 Sep 19 19:13 file1.sh
+drwxrwsr-x. 5 er1118220 apache  4096 Sep 22 12:31 Advanced_Unix
+drwxrwxr-x. 2 er1118220 apache  4096 Sep 22 12:42 Unix_Sep19
+Working with directories:
+mkdir dir_name - to create
+cd dir_name - to navigate 
+pwd - present working dir 
+cd .. - take back to the prev dir 
+rmdir dir_name - only when the dir is empty 
+rm -r dir_name - recursively remove the files from the dir 
+[er1118220@BL1UL056 public_html]$ mkdir Advanced_Unix_Sep26
+[er1118220@BL1UL056 public_html]$ cd Advanced_Unix_Sep26
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ pwd
+/home/er1118220/public_html/Advanced_Unix_Sep26
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cd ..
+[er1118220@BL1UL056 public_html]$ cd Advanced_Unix_Sep26/
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ touch file1
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ ls
+file1
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cd ..
+[er1118220@BL1UL056 public_html]$ rmdir Advanced_Unix_Sep26/
+rmdir: failed to remove 'Advanced_Unix_Sep26/': Directory not empty
+[er1118220@BL1UL056 public_html]$ rm -r Advanced_Unix_Sep26/
+[er1118220@BL1UL056 public_html]$ ls
+ActInfo        class2.php  d3.html       demo.php      emp.txt       my.sh        prpare.php      Testing
+Advanced_Unix  class3.php  Day1          demo.sql      ep.sh         names.txt    sampledata.txt  trans.php
+a.sql          cust1.txt   debugging.sh  dem.php       err.php       now.html     Sample.txt      Unix_Lex
+autoload.php   custInfo    debug.sh      echo          file1.sh      Panasonic    see.sh          Unix_Sep19
+backup.sql     cust_mail   def.php       emp           file.html     parent.php   s.php
+book.sql       cust_name   dem.html      Employee.php  function1.sh  pattern.php  style.css
+b.sql          cust.txt    demo19_6      employee.txt  function.sh   p.php        temp1
+class1.php     d2.html     demo.html     emp_tab.sql   h.sh          preg.php     Test
+[er1118220@BL1UL056 public_html]$ mkdir Advanced_Unix_Sep26
+[er1118220@BL1UL056 public_html]$ ls
+ActInfo              class2.php  Day1          dem.php       file1.sh      parent.php      style.css
+Advanced_Unix        class3.php  debugging.sh  echo          file.html     pattern.php     temp1
+Advanced_Unix_Sep26  cust1.txt   debug.sh      emp           function1.sh  p.php           Test
+a.sql                custInfo    def.php       Employee.php  function.sh   preg.php        Testing
+autoload.php         cust_mail   dem.html      employee.txt  h.sh          prpare.php      trans.php
+backup.sql           cust_name   demo19_6      emp_tab.sql   my.sh         sampledata.txt  Unix_Lex
+book.sql             cust.txt    demo.html     emp.txt       names.txt     Sample.txt      Unix_Sep19
+b.sql                d2.html     demo.php      ep.sh         now.html      see.sh
+class1.php           d3.html     demo.sql      err.php       Panasonic     s.php
+[er1118220@BL1UL056 public_html]$ cd Advanced_Unix_Sep26
+--------------------------------------------------------------------------
+Working with files:
+1.touch filename - create
+2.cat - create/write,read,append
+create:
+cat > filename - if the file exists, it will overwrite the content 
+if the file does not exists, it will create the file 
+read:
+cat < filename 
+cat filename 
+append:
+cat >> filename 
+3.vi - create,edit 
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat > file1
+hi
+hello
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat file1
+hi
+hello
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat > file1
+hello
+unix 1
+adv unix
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat file1
+hello
+unix 1
+adv unix
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat >> file1
+today is intro
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat file1
+hello
+unix 1
+adv unix
+today is intro
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ vi file1
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat file1
+hello
+unix 1
+the changes are made
+adv unix
+today is intro
+---------------------------------------------------------------------
+cat command:
+while reading only 
+-n - to number the output lines 
+-s - to supress repeated empty lines 
+-b - to number non emoty output lines 
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat file1
+hello
+unix 1
+the changes are made
+adv unix
+today is intro
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat -n file1
+     1  hello
+     2  unix 1
+     3  the changes are made
+     4  adv unix
+     5  today is intro
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ vi file1
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat -n file1
+     1  hello
+     2  unix 1
+     3  the changes are made
+     4
+     5
+     6
+     7
+     8
+     9
+    10
+    11  adv unix
+    12  today is intro
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat -s file1
+hello
+unix 1
+the changes are made
+
+adv unix
+today is intro
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat -b file1
+     1  hello
+     2  unix 1
+     3  the changes are made
+
+
+
+
+
+
+
+     4  adv unix
+     5  today is intro
+
+wc:
+word count 
+wc option filename 
+-l - print line counts 
+-w - wor counts 
+-c - byte counts 
+-m - character counts 
+
+pipeline:
+output of 1 command will be given as input to another command 
+---------------------------------------------------------------------------------
+Text Processing:
+head 
+tail
+cut 
+sort 
+uniq
+tr 
+rev 
+
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ tail -3 access.log
+10.123.80.65 - User5 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User4 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - Admin [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ tail -4 access.log
+10.123.80.65 - User5 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User5 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User4 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - Admin [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ head -n4 access.log
+10.123.80.65 - User1 [11:10:15]"GET /sony-Mobile-Mob8009/index.html HTTP/1.0"
+10.123.80.65 - User2 [11:10:15]"GET /samsung-Mobile-sam88009/index.html HTTP/1.0"
+10.123.80.65 - User1 [11:10:15]"GET /sony-Mobile-Mob8009/index.html HTTP/1.0"
+10.123.80.65 - User2 [11:10:15]"GET /sony-Laptop-Lap8009/index.html HTTP/1.0"
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ head -n4 access.log | tail -1
+10.123.80.65 - User2 [11:10:15]"GET /sony-Laptop-Lap8009/index.html HTTP/1.0"
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ tail -6 access.log
+10.123.80.65 - User3 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User4 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User5 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User5 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User4 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - Admin [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ tail -7 access.log
+10.123.80.65 - User2 [11:10:15]"GET /sony-Laptop-Lap8009/index.html HTTP/1.0"
+10.123.80.65 - User3 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User4 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User5 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User5 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User4 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - Admin [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ tail -7 access.log |head -1
+10.123.80.65 - User2 [11:10:15]"GET /sony-Laptop-Lap8009/index.html HTTP/1.0"
+tr:
+transalate from 1 form to another form 
+-d - delete the chars 
+-s - squeeze the consecutive chars 
+-c - compliment 
+tr exp1 exp2 
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "Hi"
+Hi
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "UNIX" | tr '[A-Z]' '[a-z]'
+unix
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "UNIX"
+UNIX
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "Hiiiiiiiiiii" | tr -s 'i'
+Hi
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "Hiiiiiiiiiii" | tr -d 'i'
+H
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "Hiiiiiiiiiii" | tr -cd 'i'
+iiiiiiiiiii[er1118220@BL1UL056 Advanced_Unix_Sep26]$
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "Hiiiiiiiiiii" | tr 'i' 'a'
+Haaaaaaaaaaa
+-----------------------------------------------------------------------------------
+cut command:
+brinjal:carrot:pumpkin
+-d - delimiter 
+-f - select fields 
+-c - select chars 
+cut -d":" -f filename 
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat > veg.txt
+brinjal:carrot:pumpkin
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat veg.txt
+brinjal:carrot:pumpkin
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cut -d":" -f2 veg.txt
+carrot
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cut -d":" -f1 veg.txt
+brinjal
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat > emp
+101#Dhana#HRD#30000
+102#Swetha#HRD#34000
+103#uday#IVS#25000
+104#hima#BI#30000
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cut -d"#" -f2 emp
+Dhana
+Swetha
+uday
+hima
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cut -d"#" -f2,1 emp
+101#Dhana
+102#Swetha
+103#uday
+104#hima
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cut -d"#" -f2 -f1 emp
+cut: only one type of list may be specified
+Try 'cut --help' for more information.
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cut -d"#" -f1,2 emp
+101#Dhana
+102#Swetha
+103#uday
+104#hima
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat access.log
+10.123.80.65 - User1 [11:10:15]"GET /sony-Mobile-Mob8009/index.html HTTP/1.0"
+10.123.80.65 - User2 [11:10:15]"GET /samsung-Mobile-sam88009/index.html HTTP/1.0"
+10.123.80.65 - User1 [11:10:15]"GET /sony-Mobile-Mob8009/index.html HTTP/1.0"
+10.123.80.65 - User2 [11:10:15]"GET /sony-Laptop-Lap8009/index.html HTTP/1.0"
+10.123.80.65 - User3 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User4 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User5 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User5 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User4 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - Admin [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cut -d" " -f1 access.log
+10.123.80.65
+10.123.80.65
+10.123.80.65
+10.123.80.65
+10.123.80.65
+10.123.80.65
+10.123.80.65
+10.123.80.65
+10.123.80.65
+10.123.80.65
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cut -d" " -f2 access.log
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cut -d" " -f3 access.log
+User1
+User2
+User1
+User2
+User3
+User4
+User5
+User5
+User4
+Admin
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cut -d" " -f6 access.log
+HTTP/1.0"
+HTTP/1.0"
+HTTP/1.0"
+HTTP/1.0"
+HTTP/1.0"
+HTTP/1.0"
+HTTP/1.0"
+HTTP/1.0"
+HTTP/1.0"
+HTTP/1.0"
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cut -d" " -f6 access.log | cut -d"/" -f1
+HTTP
+HTTP
+HTTP
+HTTP
+HTTP
+HTTP
+HTTP
+HTTP
+HTTP
+HTTP
+
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cut -c11 access.log
+6
+6
+6
+6
+6
+6
+6
+6
+6
+6
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cut -c16 access.log
+U
+U
+U
+U
+U
+U
+U
+U
+U
+A
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cut -c16-20 access.log
+User1
+User2
+User1
+User2
+User3
+User4
+User5
+User5
+User4
+Admin
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cut -c16,20 access.log
+U1
+U2
+U1
+U2
+U3
+U4
+U5
+U5
+U4
+An
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cut -c16- access.log
+User1 [11:10:15]"GET /sony-Mobile-Mob8009/index.html HTTP/1.0"
+User2 [11:10:15]"GET /samsung-Mobile-sam88009/index.html HTTP/1.0"
+User1 [11:10:15]"GET /sony-Mobile-Mob8009/index.html HTTP/1.0"
+User2 [11:10:15]"GET /sony-Laptop-Lap8009/index.html HTTP/1.0"
+User3 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+User4 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+User5 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+User5 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+User4 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+Admin [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+
+sort:
+re arrange the lines in asc/desc 
+numbers/lowercase/uppercase
+-r - reverse 
+-t - delimiter 
+-k - select fields 
+-n - numerical sort 
+-u - find unique
+-c - check whethr its sorted or not 
+
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat emp
+101#Dhana#HRD#30000
+102#Swetha#HRD#34000
+103#uday#IVS#25000
+104#hima#BI#30000
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sort -t"#" -k2 emp
+101#Dhana#HRD#30000
+104#hima#BI#30000
+102#Swetha#HRD#34000
+103#uday#IVS#25000
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sort -t"#" -k4 emp
+103#uday#IVS#25000
+101#Dhana#HRD#30000
+104#hima#BI#30000
+102#Swetha#HRD#34000
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sort -t"#" -k4,2 emp
+101#Dhana#HRD#30000
+102#Swetha#HRD#34000
+103#uday#IVS#25000
+104#hima#BI#30000
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sort -t"#" -nk4,2 emp
+101#Dhana#HRD#30000
+102#Swetha#HRD#34000
+103#uday#IVS#25000
+104#hima#BI#30000
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sort -t"#" -nk1,2 emp
+101#Dhana#HRD#30000
+102#Swetha#HRD#34000
+103#uday#IVS#25000
+104#hima#BI#30000
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cut -d"#" -f4 emp | sort -n
+25000
+30000
+30000
+34000
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sort -t"#" -k2,3 emp
+101#Dhana#HRD#30000
+104#hima#BI#30000
+102#Swetha#HRD#34000
+103#uday#IVS#25000
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sort -t"#" -k3,2 emp
+101#Dhana#HRD#30000
+102#Swetha#HRD#34000
+103#uday#IVS#25000
+104#hima#BI#30000
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat > number
+100
+89
+89
+78
+65
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sort number
+100
+65
+78
+89
+89
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sort -n number
+65
+78
+89
+89
+100
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sort -nr number
+100
+89
+89
+78
+65
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sort -nu number
+65
+78
+89
+100
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sort -c number
+sort: number:4: disorder: 78
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sort -nc number
+sort: number:2: disorder: 89
+--------------------------------------------------------------------------------------------
+uniq command:
+initially the file is sorted 
+-u - select non repated lines 
+-d - duplicate lines 
+-c - count of frequency 
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sort -n number | uniq
+65
+78
+89
+100
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sort -n number | uniq -u
+65
+78
+100
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sort -n number | uniq -d
+89
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sort -n number | uniq -c
+      1 65
+      1 78
+      2 89
+      1 100
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat number
+100
+89
+89
+78
+65
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sort -n number | uniq -dc
+      2 89
+
+------------------------------------------------------------------------------------
+The Tejas is the second supersonic fighter developed by HAL after the HAL HF-24 Marut.The Tejas achieved initial operational clearance in 2011 and final operational clearance in 2019. The first Tejas squadron became operational in 2016, as No.45 Squadron IAF Flying Daggers was the first to have their MiG-21s replaced with the Tejas.The Tejas currently has three production models – Tejas Mark 1, Mark 1A and trainer variant. The IAF currently placed an order for 40 Tejas Mark 1 and 73 Tejas Mark 1A and 10 trainer aircraft. The IAF plans to procure 324 aircraft in all variants, including the Tejas Mark 2 currently being developed by the HAL.The Tejas Mark 2 is expected to be ready for series production by 2026.
+
+task :
+find the word that is repeated maximum 
+cat tejas.txt|tr ' ' '\n' | tr '.' '\n'|sort|uniq -dc|sort -n | tail -1 

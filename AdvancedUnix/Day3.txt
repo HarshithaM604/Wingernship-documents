@@ -1,0 +1,371 @@
+Advanced Unix:
+https://lex.infosysapps.com/web/en/app/toc/lex_auth_0126350006109634564740/overview
+Unix Playground:
+https://lex.infosysapps.com/en/app/toc/lex_auth_012761083203747840518/overview
+JSLinux:
+https://bellard.org/jslinux/vm.html?cpu=riscv64&url=fedora33-riscv.cfg&mem=256
+Functions:
+https://lex.infosysapps.com/web/en/viewer/web-module/lex_auth_01277229136429875292?collectionId=lex_auth_0126350006109634564740&collectionType=Course&pathId=lex_auth_0126329247385354244466
+--------------------------------------------------------------------
+Functions:
+syntax:
+function name(){
+	commands
+}
+name(){
+	commands
+}
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sh Hello.sh
+Today is Third day
+Hello World
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat Hello.sh
+Hello(){
+        echo "Hello World"
+}
+Demo(){
+        echo "Today is Third day"
+}
+Demo
+Hello
+
+Taking agruments:
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sh args.sh
+Dhana DL DLX
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat args.sh
+print(){
+        echo $1 $2 $3
+}
+print Dhana DL DLX
+
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat args.sh
+print(){
+        name=$1
+        echo "The name is $name"
+}
+name="Anitha"
+echo "The name is $name"
+print Dhana
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ vi args.sh
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sh args.sh
+The name is Anitha
+The name is Dhana
+The name is Dhana
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ vi args.sh
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sh args.sh
+The name is Anitha
+The name is Dhana
+The name is Anitha
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat args.sh
+print(){
+        local name=$1
+        echo "The name is $name"
+}
+name="Anitha"
+echo "The name is $name"
+print Dhana
+echo "The name is $name"
+#anitha dhana anitha
+#anitha dhana dhana
+-----------------------------------------------------------------------------
+Hello
+name: Dhana
+names.txt 
+Put Dhana 
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "Hi"
+Hi
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "Hi"|cat >>names.txt
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat names.txt
+Hi
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "Hello" >>names.txt
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat names.txt
+Hi
+Hello
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ vi example.sh
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sh example.sh
+Hello
+Dhana
+Hi Dhana. Your name is successfully registered
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat names.txt
+Hi
+Hello
+Dhana
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat example.sh
+echo "Hello"
+read name
+echo "$name" >> names.txt
+echo "Hi $name. Your name is successfully registered"
+--------------------------------------------------------------------------------------
+Registration Validation:
+Validate the name
+Validate the email 
+If successful then 
+name:email into file called customer.txt 
+
+verify_name(){
+	echo $1 > cust_name 
+	if [ `egrep "^[A-Za-z]+$" cust_name` ]
+	then
+		return 1
+	else
+		return 0
+	fi
+}
+verify_mail(){
+	echo $1 > cust_mail 
+	if [ `egrep "^[A-Za-z0-9_]+@[A-Za-z]+(.com|.in)$" cust_mail` ]
+	then
+		return 1
+	else 
+		return 0
+	fi
+}
+register(){
+	verify_name $1
+	#function $1 
+	if [ $? -eq 1 ]
+		then 
+			verify_mail $2
+			#function $1 
+			if [ $? -eq 1 ]
+			then 
+				echo "$cust_name:$cust_mail" >> customer.txt
+				echo "registered successfully"
+			else
+				echo "Email ID is wrong"
+			fi
+	else
+		echo "Name is invalid"
+	fi
+}
+read -p "Enter your name: " cust_name
+read -p "enter your mail ID: " cust_mail
+register $cust_name $cust_mail
+#function $1 $2 
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sh example.sh
+Enter your name: Dhana
+enter your mail ID: dhana_12@gmail.com
+registered successfully
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat customer.txt
+Dhana:dhana_12@gmail.com
+-----------------------------------------------------------------------------------
+Job Scheduling:
+cat > backup.sh
+cp /home/er1118220/* /data/backup
+rm -r /home/er1118220/* 
+
+crontab -e 
+* * * * * <command>
+* - min (0-59)
+* - hour (0-23)
+* - day (0-31)
+* - month (1-12)
+* - day of the week (0-6)(0-Sunday)
+
+Run the script every 10 mins:
+10 * * * * backup.sh 
+At 4:20PM:
+20 16 * * * backup.sh
+At 9.10am and 3.15pm on 12th of every month 
+10,15 9,15 12 * * backup.sh 
+At 10.00am and 12.00am on every wednesday and sunday
+0,0 0,10 * * 3,0 backup.sh
+------------------------------------------------------------------------------
+System Performance Check:
+access.log
+error.log 
+df:
+df -h - human readable form 
+df -T - type of the file 
+df -k - display n 1024 bytes 
+df -m - display in megabytes 
+
+to display the file system disk space usage 
+/ - root directory 
+/home- home direcotries for all users 
+/bin - system level commands and the executables 
+/usr  installed softwares,libraries 
+/var - dynamic changes are here 
+/etc - configuration files 
+/root - root directory of the super admin 
+
+du commad:
+memory consumption of directories and files [er1118220@BL1UL056 etc]$ ls | grep "python"
+[er1118220@BL1UL056 etc]$ ls | grep "py"
+[er1118220@BL1UL056 etc]$ cd ~
+[er1118220@BL1UL056 ~]$ df
+Filesystem          1K-blocks     Used Available Use% Mounted on
+devtmpfs              8017940        0   8017940   0% /dev
+tmpfs                 8047700        0   8047700   0% /dev/shm
+tmpfs                 8047700   803728   7243972  10% /run
+tmpfs                 8047700        0   8047700   0% /sys/fs/cgroup
+/dev/mapper/ol-root  46110724 30894272  15216452  68% /
+/dev/xvda1            1038336   555880    482456  54% /boot
+tmpfs                 1609540       12   1609528   1% /run/user/42
+tmpfs                 1609540        0   1609540   0% /run/user/1069
+tmpfs                 1609540        0   1609540   0% /run/user/1066
+tmpfs                 1609540        4   1609536   1% /run/user/1071
+tmpfs                 1609540        4   1609536   1% /run/user/1058
+[er1118220@BL1UL056 ~]$ df -h
+Filesystem           Size  Used Avail Use% Mounted on
+devtmpfs             7.7G     0  7.7G   0% /dev
+tmpfs                7.7G     0  7.7G   0% /dev/shm
+tmpfs                7.7G  785M  7.0G  10% /run
+tmpfs                7.7G     0  7.7G   0% /sys/fs/cgroup
+/dev/mapper/ol-root   44G   30G   15G  68% /
+/dev/xvda1          1014M  543M  472M  54% /boot
+tmpfs                1.6G   12K  1.6G   1% /run/user/42
+tmpfs                1.6G     0  1.6G   0% /run/user/1069
+tmpfs                1.6G     0  1.6G   0% /run/user/1066
+tmpfs                1.6G     0  1.6G   0% /run/user/1071
+tmpfs                1.6G  4.0K  1.6G   1% /run/user/1058
+[er1118220@BL1UL056 ~]$ df -T
+Filesystem          Type     1K-blocks     Used Available Use% Mounted on
+devtmpfs            devtmpfs   8017940        0   8017940   0% /dev
+tmpfs               tmpfs      8047700        0   8047700   0% /dev/shm
+tmpfs               tmpfs      8047700   803700   7244000  10% /run
+tmpfs               tmpfs      8047700        0   8047700   0% /sys/fs/cgroup
+/dev/mapper/ol-root xfs       46110724 30892712  15218012  67% /
+/dev/xvda1          xfs        1038336   555880    482456  54% /boot
+tmpfs               tmpfs      1609540       12   1609528   1% /run/user/42
+tmpfs               tmpfs      1609540        0   1609540   0% /run/user/1069
+tmpfs               tmpfs      1609540        0   1609540   0% /run/user/1066
+tmpfs               tmpfs      1609540        4   1609536   1% /run/user/1058
+[er1118220@BL1UL056 ~]$ du /home/er1118220/public_html/
+0       /home/er1118220/public_html/Test/Day2
+0       /home/er1118220/public_html/Test/dir3
+0       /home/er1118220/public_html/Test/dir1
+12      /home/er1118220/public_html/Test/dir2
+68      /home/er1118220/public_html/Test
+0       /home/er1118220/public_html/Day1/Session2
+156     /home/er1118220/public_html/Day1
+56      /home/er1118220/public_html/Testing/Unix_Lex
+56      /home/er1118220/public_html/Testing
+0       /home/er1118220/public_html/Panasonic/Day3_P
+164     /home/er1118220/public_html/Panasonic
+92      /home/er1118220/public_html/Unix_Sep19
+80      /home/er1118220/public_html/Advanced_Unix_Sep26
+0       /home/er1118220/public_html/Advanced_Unix/dir1
+0       /home/er1118220/public_html/Advanced_Unix/dir2
+28      /home/er1118220/public_html/Advanced_Unix/dir3
+124     /home/er1118220/public_html/Advanced_Unix
+76      /home/er1118220/public_html/Unix_Lex/Aug_22
+88      /home/er1118220/public_html/Unix_Lex/Sep5
+208     /home/er1118220/public_html/Unix_Lex
+1176    /home/er1118220/public_html/
+[er1118220@BL1UL056 ~]$ du -h /home/er1118220/public_html/
+0       /home/er1118220/public_html/Test/Day2
+0       /home/er1118220/public_html/Test/dir3
+0       /home/er1118220/public_html/Test/dir1
+12K     /home/er1118220/public_html/Test/dir2
+68K     /home/er1118220/public_html/Test
+0       /home/er1118220/public_html/Day1/Session2
+156K    /home/er1118220/public_html/Day1
+56K     /home/er1118220/public_html/Testing/Unix_Lex
+56K     /home/er1118220/public_html/Testing
+0       /home/er1118220/public_html/Panasonic/Day3_P
+164K    /home/er1118220/public_html/Panasonic
+92K     /home/er1118220/public_html/Unix_Sep19
+80K     /home/er1118220/public_html/Advanced_Unix_Sep26
+0       /home/er1118220/public_html/Advanced_Unix/dir1
+0       /home/er1118220/public_html/Advanced_Unix/dir2
+28K     /home/er1118220/public_html/Advanced_Unix/dir3
+124K    /home/er1118220/public_html/Advanced_Unix
+76K     /home/er1118220/public_html/Unix_Lex/Aug_22
+88K     /home/er1118220/public_html/Unix_Lex/Sep5
+208K    /home/er1118220/public_html/Unix_Lex
+1.2M    /home/er1118220/public_html/
+[er1118220@BL1UL056 ~]$ du -h --max-depth=2 /home/er1118220/
+0       /home/er1118220/.mozilla/extensions
+0       /home/er1118220/.mozilla/plugins
+0       /home/er1118220/.mozilla
+68K     /home/er1118220/public_html/Test
+156K    /home/er1118220/public_html/Day1
+56K     /home/er1118220/public_html/Testing
+164K    /home/er1118220/public_html/Panasonic
+92K     /home/er1118220/public_html/Unix_Sep19
+80K     /home/er1118220/public_html/Advanced_Unix_Sep26
+124K    /home/er1118220/public_html/Advanced_Unix
+208K    /home/er1118220/public_html/Unix_Lex
+1.2M    /home/er1118220/public_html
+32K     /home/er1118220/.config/pulse
+0       /home/er1118220/.config/procps
+32K     /home/er1118220/.config
+0       /home/er1118220/day2
+0       /home/er1118220/er1118220/.mozilla
+0       /home/er1118220/er1118220/public_html
+16K     /home/er1118220/er1118220
+0       /home/er1118220/test
+0       /home/er1118220/.cache
+4.0K    /home/er1118220/.local/share
+4.0K    /home/er1118220/.local
+0       /home/er1118220/new
+28K     /home/er1118220/conf
+4.0K    /home/er1118220/.vim
+28K     /home/er1118220/ID_MANAGEMENT/FILE_IDS
+556K    /home/er1118220/ID_MANAGEMENT/LOGS
+48K     /home/er1118220/ID_MANAGEMENT/.FOR_SHELL
+32K     /home/er1118220/ID_MANAGEMENT/SQL_FILES
+480K    /home/er1118220/ID_MANAGEMENT/ID_CREATION
+12K     /home/er1118220/ID_MANAGEMENT/CLEANUP
+220K    /home/er1118220/ID_MANAGEMENT/.LEGACY
+1.4M    /home/er1118220/ID_MANAGEMENT
+2.8M    /home/er1118220/
+[er1118220@BL1UL056 ~]$ du -h --max-depth=3 /home/er1118220/
+0       /home/er1118220/.mozilla/extensions
+0       /home/er1118220/.mozilla/plugins
+0       /home/er1118220/.mozilla
+0       /home/er1118220/public_html/Test/Day2
+0       /home/er1118220/public_html/Test/dir3
+0       /home/er1118220/public_html/Test/dir1
+12K     /home/er1118220/public_html/Test/dir2
+68K     /home/er1118220/public_html/Test
+0       /home/er1118220/public_html/Day1/Session2
+156K    /home/er1118220/public_html/Day1
+56K     /home/er1118220/public_html/Testing/Unix_Lex
+56K     /home/er1118220/public_html/Testing
+0       /home/er1118220/public_html/Panasonic/Day3_P
+164K    /home/er1118220/public_html/Panasonic
+92K     /home/er1118220/public_html/Unix_Sep19
+80K     /home/er1118220/public_html/Advanced_Unix_Sep26
+0       /home/er1118220/public_html/Advanced_Unix/dir1
+0       /home/er1118220/public_html/Advanced_Unix/dir2
+28K     /home/er1118220/public_html/Advanced_Unix/dir3
+124K    /home/er1118220/public_html/Advanced_Unix
+76K     /home/er1118220/public_html/Unix_Lex/Aug_22
+88K     /home/er1118220/public_html/Unix_Lex/Sep5
+208K    /home/er1118220/public_html/Unix_Lex
+1.2M    /home/er1118220/public_html
+32K     /home/er1118220/.config/pulse
+0       /home/er1118220/.config/procps
+32K     /home/er1118220/.config
+0       /home/er1118220/day2
+0       /home/er1118220/er1118220/.mozilla/extensions
+0       /home/er1118220/er1118220/.mozilla/plugins
+0       /home/er1118220/er1118220/.mozilla
+0       /home/er1118220/er1118220/public_html
+16K     /home/er1118220/er1118220
+0       /home/er1118220/test
+0       /home/er1118220/.cache
+4.0K    /home/er1118220/.local/share/keyrings
+4.0K    /home/er1118220/.local/share
+4.0K    /home/er1118220/.local
+0       /home/er1118220/new
+28K     /home/er1118220/conf
+4.0K    /home/er1118220/.vim
+28K     /home/er1118220/ID_MANAGEMENT/FILE_IDS
+556K    /home/er1118220/ID_MANAGEMENT/LOGS
+48K     /home/er1118220/ID_MANAGEMENT/.FOR_SHELL
+32K     /home/er1118220/ID_MANAGEMENT/SQL_FILES
+448K    /home/er1118220/ID_MANAGEMENT/ID_CREATION/LEGACY
+480K    /home/er1118220/ID_MANAGEMENT/ID_CREATION
+12K     /home/er1118220/ID_MANAGEMENT/CLEANUP
+220K    /home/er1118220/ID_MANAGEMENT/.LEGACY
+1.4M    /home/er1118220/ID_MANAGEMENT
+2.8M    /home/er1118220/
+---------------------------------------------------------------------------------------
+Backup and Remove:
+rm 
+cp , mv 
+tar, cpio,gzip 
+
+

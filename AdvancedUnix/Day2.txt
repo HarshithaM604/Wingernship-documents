@@ -1,0 +1,609 @@
+Advanced Unix:
+https://lex.infosysapps.com/web/en/app/toc/lex_auth_0126350006109634564740/overview
+Introduction to Unix:
+https://lex.infosysapps.com/en/app/toc/lex_auth_01265419704839372873/overview
+Unix Playground:
+https://lex.infosysapps.com/en/app/toc/lex_auth_012761083203747840518/overview
+JSLinux:
+https://bellard.org/jslinux/vm.html?cpu=riscv64&url=fedora33-riscv.cfg&mem=256
+--------------------------------------------------------------------------------------------
+Pattern Matching:
+presence of token/keywords/pattern 
+1.filter anything
+2.validate the data 
+username 
+password 
+submit 
+
+options:
+-i - ignore cases 
+-n - prefix each line of output with numbering 
+-x - match the pattern as a whole line 
+-c - print count of the matching lines 
+-v - print non matching lines 
+-E - Extend egrep
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat access.log
+10.123.80.65 - User1 [11:10:15]"GET /sony-Mobile-Mob8009/index.html HTTP/1.0"
+10.123.80.65 - User2 [11:10:15]"GET /samsung-Mobile-sam88009/index.html HTTP/1.0"
+10.123.80.65 - User1 [11:10:15]"GET /sony-Mobile-Mob8009/index.html HTTP/1.0"
+10.123.80.65 - User2 [11:10:15]"GET /sony-Laptop-Lap8009/index.html HTTP/1.0"
+10.123.80.65 - User3 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User4 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User5 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User5 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User4 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - Admin [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ grep 'Inverter' access.log
+10.123.80.65 - User3 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User4 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User5 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User5 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User4 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - Admin [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ grep 'inverter' access.log
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ grep -i 'inverter' access.log
+10.123.80.65 - User3 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User4 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User5 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User5 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User4 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - Admin [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ grep -in 'inverter' access.log
+5:10.123.80.65 - User3 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+6:10.123.80.65 - User4 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+7:10.123.80.65 - User5 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+8:10.123.80.65 - User5 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+9:10.123.80.65 - User4 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10:10.123.80.65 - Admin [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat access.log
+10.123.80.65 - User1 [11:10:15]"GET /sony-Mobile-Mob8009/index.html HTTP/1.0"
+10.123.80.65 - User2 [11:10:15]"GET /samsung-Mobile-sam88009/index.html HTTP/1.0"
+10.123.80.65 - User1 [11:10:15]"GET /sony-Mobile-Mob8009/index.html HTTP/1.0"
+10.123.80.65 - User2 [11:10:15]"GET /sony-Laptop-Lap8009/index.html HTTP/1.0"
+10.123.80.65 - User3 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User4 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User5 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User5 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User4 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - Admin [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ grep -ix 'inverter' access.log
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat >> access.log
+inverter
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat access.log
+10.123.80.65 - User1 [11:10:15]"GET /sony-Mobile-Mob8009/index.html HTTP/1.0"
+10.123.80.65 - User2 [11:10:15]"GET /samsung-Mobile-sam88009/index.html HTTP/1.0"
+10.123.80.65 - User1 [11:10:15]"GET /sony-Mobile-Mob8009/index.html HTTP/1.0"
+10.123.80.65 - User2 [11:10:15]"GET /sony-Laptop-Lap8009/index.html HTTP/1.0"
+10.123.80.65 - User3 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User4 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User5 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User5 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - User4 [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+10.123.80.65 - Admin [11:10:15]"GET /sony-Inverter-IN8009/index.html HTTP/1.0"
+inverter
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ grep -ix 'inverter' access.log
+inverter
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ grep -ic 'inverter' access.log
+7
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ grep -iv 'inverter' access.log
+10.123.80.65 - User1 [11:10:15]"GET /sony-Mobile-Mob8009/index.html HTTP/1.0"
+10.123.80.65 - User2 [11:10:15]"GET /samsung-Mobile-sam88009/index.html HTTP/1.0"
+10.123.80.65 - User1 [11:10:15]"GET /sony-Mobile-Mob8009/index.html HTTP/1.0"
+10.123.80.65 - User2 [11:10:15]"GET /sony-Laptop-Lap8009/index.html HTTP/1.0"
+------------------------------------------------------------------------------------
+Basic Regular Expression 
+grep 'pattern' filename 
+
+Extended Regular Expression 
+grep -E / egrep 
+
+Perl Regular Expression 
+grep -P 
+
+Metacharacters:
+^ - starts with 
+$ - ends with 
+[] - group
+[pqrs]- match anything p or q or r or s 
+[a-z] 
+{m,n} - m - min length,n - max length 
+{m} - exact m length 
+{m,} - min length -m and max length can be anything 
+{1,} - min length -1, max - anything 
+{,n} - min can be anything but max - n chars 
+{,10} 
+(this | that) - or 
+* - 0/more occurences of prev char 
+a* - a/aa/aaa/aaaaaaaa/
++ - 1/more occurences of prev chars 
+a+ - aa/aaa/aaaa/aaaaa
+. - exactly 1 char 
+? - optional 
+
+Validate my name:
+name must be only characters 
+name must not have digits or special characters included 
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "Dhana" | egrep '[a-z]'
+Dhana
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "Dhana" | egrep -i '[a-z]'
+Dhana
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "Dhana" | egrep '[A-Z][a-z]'
+Dhana
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "Dhana" | egrep '[A-Z][a-z]+'
+Dhana
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "Dhana" | egrep '[a-z]'
+Dhana
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "Dhana" | egrep '[A-Z][a-z]'
+Dhana
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "Dhana" | egrep '[A-Z][a-z][a-z][a-z][a-z]'
+Dhana
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "Dhanalakshmi" | egrep '[A-Z][a-z][a-z][a-z][a-z]'
+Dhanalakshmi
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "Dhanalakshmi" | egrep '[A-Z][a-z]+'
+Dhanalakshmi
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "Dhana" | egrep '[A-Z][a-z]+'
+Dhana
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "DhanalakshmiParamashivan" | egrep '[A-Z][a-z]+'
+DhanalakshmiParamashivan
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "DhanalakshmiParamashivan" | egrep '[A-Z][a-z]*'
+DhanalakshmiParamashivan
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "Dh" | egrep '[A-Z][a-z]*'
+Dh
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "Dha" | egrep '[A-Z][a-z]*'
+Dha
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "DhanalakshmiParamashivan" | egrep '[A-Z][a-z]+'
+DhanalakshmiParamashivan
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "DhanaLakshmi" | egrep '[A-Z][a-z]+'
+DhanaLakshmi
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "Dhana123" | egrep '[A-Z][a-z]+'
+Dhana123
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "Dhana123" | egrep '[A-Z][a-z]+$'
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "Dhana" | egrep '[A-Z][a-z]+$'
+Dhana
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "Dhana12" | egrep '[A-Z][a-z]+$'
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "Dh12ana" | egrep '[A-Z][a-z]+$'
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "12Dhana" | egrep '[A-Z][a-z]+$'
+12Dhana
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "12Dhana" | egrep '^[A-Z][a-z]+$'
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "Dhana" | egrep '^[A-Z][a-z]+$'
+Dhana
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "Dha12na" | egrep '^[A-Z][a-z]+$'
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "Dha#na" | egrep '^[A-Z][a-z]+$'
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "Dhanlakshmi" | egrep '^[A-Z][a-z]+$'
+Dhanlakshmi
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "DhanLakshmi" | egrep '^[A-Z][a-z]+$'
+---------------------------------------------------------------------------------------------
+Validating my phone number:
+number has to be only digits 
+it starts with eiher 6/7/8 or 9
+there should no chars or no spl characters
+number should be 10 digits 
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "8787878787" | egrep '^[0-9]${10}'
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "8787878787" | egrep '^[1-9][0-9]{9}$'
+8787878787
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "878787878787" | egrep '^[1-9][0-9]{9}$'
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo "878787" | egrep '^[1-9][0-9]{9}$'
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo '989898989800' | egrep '^[6-9][0-9]{9}'
+989898989800
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo '989898989800' | egrep '^[6-9][0-9]{9}$'
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo '9898989898' | egrep '^[6-9][0-9]{9}$'
+9898989898
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo '98989898' | egrep '^[6-9][0-9]{9}$'
+-----------------------------------------------------------------------------------------
+Validating email:
+small letters and follwed by _ and digits 
+@
+domain name 
+.com or .in 
+
+Succcessful:
+dhana_12@gmail.com 
+dhana_12@gmail.in 
+^[a-z]+_[0-9]+@[a-z]+.[com|in]$
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo 'dhana_12@gmail.com'| egrep '^[a-z]+_[0-9]+@[a-z]+.[com|in]$'
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo 'dhana_12@gmail.com'| egrep '^[a-z]+_[0-9]+@[a-z]+.(com|in)$'
+dhana_12@gmail.com
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo 'dha_na12@gmail.com'| egrep '^[a-z]+_[0-9]+@[a-z]+.(com|in)$'
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo 'dhana12_@gmail.com'| egrep '^[a-z]+_[0-9]+@[a-z]+.(com|in)$'
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo 'dhana_12@gmail.in'| egrep '^[a-z]+_[0-9]+@[a-z]+.(com|in)$'
+---------------------------------------------------------------------------------------------
+VI Editor:
+1.command mode - keys are treated as commands 
+2.insert mode - raw content 
+3.escape mode - save and quit 
+
+Shell Scripting:
+execute the shellscript:
+1. sh filename.sh 
+execute the shellscript in the subshell and print the output in the parent shell 
+2. . filename.sh 
+execute the shellscript in the current shell without invoking any subshell 
+3. adding pwd to the path variable 
+
+Shell variable:
+1.user defined variables 
+2.arrays
+3.special variables
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ python
+Python 3.8.8 (default, Apr 13 2021, 19:58:26)
+[GCC 7.3.0] :: Anaconda, Inc. on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> print("Hi")
+Hi
+>>>
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ a=10
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo a
+a
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo $a
+10
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ read a
+dhana
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo $a
+dhana
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ read -p "Enter your name: " a
+Enter your name: Dhana
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo $a
+Dhana
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ vi name.sh
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sh name.sh
+Enter your name
+Dhana
+The name is Dhana
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat name.sh
+echo "Enter your name"
+read name
+echo "The name is $name"
+
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sh name.sh
+Enter your name
+The name is
+name.sh: line 4: name: readonly variable
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat name.sh
+echo "Enter your name"
+readonly name
+echo "The name is $name"
+name="anitha"
+echo "The name is $name"
+
+Arrays:
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ arr=(10 20 "Infosys" "Unix" 30)
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo ${arr}
+10
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo ${arr[2]}
+Infosys
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo ${arr[4]}
+30
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo ${arr[*]}
+10 20 Infosys Unix 30
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo ${arr[@]}
+10 20 Infosys Unix 30
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo ${#arr[@]}
+5
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo ${arr[0]}
+10
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo ${arr[@]}
+10 20 Infosys Unix 30
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo $#{arr[@]}
+0{arr[@]}
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo ${#arr[@]}
+5
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo ${arr[2]}
+Infosys
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo ${#arr[2]}
+7
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo ${#arr[*]}
+5
+----------------------------------------------------------------------------------
+Special Variables:
+$0 - script name
+$1 - first argument
+$2 - second argument 
+$3 - third argument 
+.......
+$@ - agrs sent in the command line 
+$# - no. of argument
+$? - exit status of last command 
+
+add(int a,int b)
+{
+int c;
+c=a+b;
+return c;
+}
+
+add(10,20);
+
+sh special.sh 10 20 30
+sh $0 $1 $2 $3....
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ vi speical.sh
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sh speical.sh
+The script name is speical.sh
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ mv speical.sh special.sh
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sh special.sh
+The script name is special.sh
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat special.sh
+echo "The script name is $0"
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat >> special.sh
+echo "The first argument passed is $1"
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sh special.sh 10
+The script name is special.sh
+The first argument passed is 10
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ vi special.sh
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sh special.sh 10 20
+The script name is special.sh
+The first argument passed is 10
+The second argument is 20
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sh special.sh 10 20 30
+The script name is special.sh
+The first argument passed is 10
+The second argument is 20
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ vi special.sh
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sh special.sh 10 20 30
+The first argument passed is 10
+The second argument is 20
+The total arguments are 3
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ vi special.sh
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sh special.sh 10 20 30
+The first argument passed is 10
+The second argument is 20
+The total arguments are 3
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sh special.sh 10 20 30 40
+The first argument passed is 10
+The second argument is 20
+The total arguments are 4
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ print"Hi";
+bash: printHi: command not found...
+Failed to search for file: Failed to download gpg key for repo 'mongodb-org-5.0': Curl error (6): Couldn't resolve host name for https://www.mongodb.org/static/pgp/server-5.0.asc [Could not resolve host: www.mongodb.org]
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ print "Hi";
+bash: print: command not found...
+Failed to search for file: Failed to download gpg key for repo 'mongodb-org-5.0': Curl error (6): Couldn't resolve host name for https://www.mongodb.org/static/pgp/server-5.0.asc [Could not resolve host: www.mongodb.org]
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ printf "Hi";
+Hi[er1118220@BL1UL056 Advanced_Unix_Sep26]$ . special.sh 10 20 30
+The first argument passed is 10
+The second argument is 20
+The total arguments are 3
+
+Command Substitution:
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ a=ls
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo $a
+ls
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ a=`ls`
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo $a
+access.log customer emp employee.txt file1 name.sh number special.sh tejas.txt veg.txt
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ a=`echo "Infosys";ls`
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ echo $a
+Infosys access.log customer emp employee.txt file1 name.sh number special.sh tejas.txt veg.txt
+bc-->
+12+13
+25
+12*13
+156
+12/3
+4
+scale=2
+10/3
+3.33
+scale=4
+10/3
+3.3333
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sh cal.sh
+3
+4
+7
+7
+7
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat cal.sh
+read a
+read b
+c=$(echo "$a+$b"|bc)
+echo $c
+
+d=$((a+b))
+echo $d
+
+e=`expr $a + $b`
+echo $e
+
+Control Structures:
+1.selective - if family,case
+2.iterative -while,until,for 
+Relational operators :
+> -gt
+< -lt 
+>= -ge 
+<= -le
+== -eq
+!= -neq 
+syntax:
+if [ condition ]
+then 
+	//logic
+fi
+
+if [ condition ]
+then 
+	//logic
+else
+	//logic
+fi
+
+if [ condition ]
+then 
+	//logic
+elif [ condition ]
+then 
+	//logic
+	.....
+else
+	//logic
+fi
+;; - break
+case "expression" in 
+then
+case 1) //logic ;;
+case 2) //logic ;;
+case * ) // default 
+esac 
+
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sh if.sh
+30
+20
+30 is greater
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sh if.sh
+24
+22
+24 is greater
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ sh if.sh
+45
+47
+47 is greater
+[er1118220@BL1UL056 Advanced_Unix_Sep26]$ cat if.sh
+read a
+read b
+if [ $a -gt $b ]
+then
+        echo "$a is greater"
+else
+        echo "$b is greater"
+fi
+------------------------------------------------------------------------------------
+while-if condition is true,loop will be executed 
+if condition is false loop will be terminated 
+
+while [ condition ]
+do
+	//logic
+done
+
+until -if condition is false,loop will be executed 
+if condition is true loop will be terminated 
+until [ condition ]
+do 
+	//logic
+done 
+
+for
+method1:
+for i in 1 2 3 4 5:
+do
+	echo $i
+done 
+
+method2:
+declaration;condition;incrementation
+for((i=0;i<=5;i++))
+do
+	echo $i
+done
+--------------------------------------------------------------------
+Control Structures:
+1.Selective- if family,case
+2.Iterative-while,until,for 
+
+;; - break statement
+Case:
+case condition in 
+then 
+case 1) //logic ;;
+case 2) // logic ;;
+*) default ;;
+esac 
+
+choice=$1
+case "$choice" in 
+"carrot") echo "Its a veggie" ;;
+"spinach") echo "Its a leafy veggie" ;;
+"apple") echo "Its a fruit" ;;
+*) echo "Not found" ;;
+esac
+-----------------------------------------------------------------------------
+while:
+loop will be ececuted when the condition is true 
+if the condition is false the loop gets terminated 
+0 1 2 3 4 5 
+while condition 
+do 
+	//logic
+done 
+a=0
+while{
+print a
+a=a+1
+}
+
+a=10
+b=20
+c=$(echo "$a+$b"|bc)
+echo $c
+#10+20
+
+d=$((a+b))
+echo $d
+
+e=`expr $a + $b`
+echo $e
+
+
+a=0
+while [ $a -lt 6 ]
+do 
+	echo $a
+	a=`expr $a + 1`
+done 
+
+untill:
+loop will be executed when the condition is false
+if the condition is true the loop gets terminated 	
+a=0
+until [ $a -ge 6 ]
+do 
+	echo $a
+	a=`expr $a + 1`
+done
+
+a>6
+0>6 f
+5>6 f
+5>=6 f
+6>=6 t 
+
+
+6>6 f
+
+0=5 f
+5=5 t
+0 1 2 3 4 
+
+for loop:
+method1:
+for i in 1 2 3 4 5:
+do
+	echo $i
+done 
+
+method2:
+declaration;condition;incrementation
+for((i=0;i<=5;i++))
+do
+	echo $i
+done 
+
+var=4
+{
+while(4!=0)
+print var
+until (4!=4)
+{
+print var 
+}
+var=4-1
+}
+
+
+o/p:
+4 4 4 4 4 4 
+
+
+
