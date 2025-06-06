@@ -1,0 +1,33 @@
+muscou principle in UI:
+=========================
+Must Have---
+Should Have--- 
+Could have---
+dribble.com
+figma.com(instagram UI)
+Vedanth Hegde----UI inspiration from him
+
+
+Types of wireframing
+1.Low Fidelity
+2.Medium Fidelity
+3.High Fidelity
+
+emmet and boiler code
+30pt
+20pt
+designcode.io
+
+3840*2160--shape
+apple uses #f1f1f1 as background color
+UNDRAW.CO--
+Apple and Mobility channel
+
+puneethchawla--utube
+GFX mentor
+virag.bardiya@infosys.com
+
+Namasthe JS
+
+
+
