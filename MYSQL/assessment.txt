@@ -1,0 +1,211 @@
+create table payroll_salary_slip_details
+(slip_id int primary key auto_increment,
+employee_id int,
+generation_date date not null,
+total_allowance double(10,2) default 0,
+total_deduction double(10,2) default 0,
+total_salary decimal(10,2) default 0,
+foreign key(employee_id) references payroll_employee_details(employee_id))
+engine=InnoDB auto_increment=101;
+
+create procedure payroll_salary_calculator(p_empid int,p_joblevel varchar(5),OUT p_salary float)
+begin
+    declare p_id int;
+    declare TA double(10,2);
+    declare TD double(10,2);
+    declare b_sal double(10,2);
+    select employee_id into p_id
+    from payroll_employee_details
+    where employee_id=p_empid;
+    if p_id is null then
+      set p_salary=-1;
+    else
+      
+      select basic_salary into b_sal,Da into da,Pf into pf
+      from payroll_salary_details
+      where job_level=p_joblevel;
+      set TA=(da*b_sal*0.01);
+      set TD=(pf*b_sal*0.01);
+      p_salary=b_sal+TA-TD;
+      update payroll_salary_slip_details
+      set total_allowance=TA,total_deduction=TD,total_salary=p_salary
+      where employee_id=p_empid;
+     end if;
+end;
+
+
+create trigger update_payroll_salary_slip
+after insert on payroll_employee_details
+for each row
+begin
+    insert into payroll_salary_slip_details(employee_id,generation_date) values
+    (new.employee_id,current_date());
+end;
+
+PYTHON
+=============
+
+def generate_fibonacci_series(limit):
+    a=1
+    b=1
+    c=0
+    outputlist=[]
+    outputlist.append(a,b)
+    while c<=limit:
+        c=a+b
+        outputlist.append(c)
+        a=b
+        b=c
+    return outputlist
+
+def generate_result(numbers):
+    c=0
+    output_list=[]
+    output_dict={}
+    if numbers is empty:
+       output_dict[1]="empty"
+    for i in numbers:
+       if i>0:
+           output_list=generate_fibonacci_series(i)
+           output_dict.[i]=output_list
+       elif i<0:
+           c++
+           continue
+    if len(numbers)==c:
+          output_dict[2]="negative_numbers"
+      
+       
+           
+     output_dict={}
+     
+#!/bin/bash
+FILE="players.txt"
+menu(){
+ choice=$1
+ case $choice in
+    1) read -p "Enter player_id" player_id
+       read -p "Enter player_name" player_name
+       read -p "Enter Runs: " runs
+       read -p "Enter Fours: " fours
+       read -p "Enter Sixes: " sixes
+       read -p "Enter Balls: : balls
+       update_player_details $player_id $player_name $runs $fours $sixes balls;;
+    2) return 7;;
+    *) return 8;;
+  esac
+}
+validate_player_name(){
+  player_name=$1
+  
+  if  [[ "$player_name" =~ ^[A-Za-z]+(\s[A-Za-z])*$ ]] && [[ ! -z "$player_name" ]]; then
+        return 1
+  else
+        return 2
+  fi
+}
+update_player_details(){
+   player_id=$1
+   player_name=$2
+   runs=$3
+   fours=$4
+   sixes=$5
+   balls=$6
+   if grep -q "$player_id#" "$FILE"; then
+        if grep -i "^$player_id#" "$FILE";then
+           existing_name=$(grep -i "^$player_id#" "$FILE"|cut -d "#" -f2)
+         if [[ $existing_name != $player_name ]];then
+             sed -i "/$player_id#$player_name/c\\$runs#$fours-$sixes#$balls" "$FILE"
+             return 3
+         else
+           return 4
+         fi
+    else
+       validate_player_name $player_name
+       if [[ $? -eq 2 ]]; then
+         return 6
+       else
+           echo "$player_id#$player_name#$runs#$fours-$sixes#$balls" >> "$FILE"
+        fi
+     fi
+     sort -t "#" -k1,1n "$FILE"
+           return 5
+}
+   
+
+CREATE PROCEDURE payroll_salary_calculator(
+    IN p_empid INT,
+    IN p_joblevel VARCHAR(5),
+    OUT p_salary FLOAT
+)
+BEGIN
+    DECLARE p_id INT;
+    DECLARE TA DOUBLE(10,2);
+    DECLARE TD DOUBLE(10,2);
+    DECLARE b_sal DOUBLE(10,2);
+    DECLARE da DOUBLE(10,2);
+    DECLARE pf DOUBLE(10,2);
+
+    -- Check if Employee Exists
+    SELECT employee_id INTO p_id
+    FROM payroll_employee_details
+    WHERE employee_id = p_empid;
+
+    IF p_id IS NULL THEN
+        SET p_salary = -1;  -- Indicating employee not found
+    ELSE
+        -- Fetch salary details for the given job level
+        SELECT basic_salary, Da, Pf
+        INTO b_sal, da, pf
+        FROM payroll_salary_details
+        WHERE job_level = p_joblevel;
+
+        -- Calculate Allowances and Deductions
+        SET TA = (da + (b_sal * 0.01));
+        SET TD = (pf * b_sal * 0.01);
+
+        -- Compute Final Salary
+        SET p_salary = (b_sal + TA - TD);
+
+        -- Update Salary Slip Details
+        UPDATE payroll_salary_slip_details
+        SET total_allowance = TA,
+            total_deduction = TD,
+            total_salary = p_salary
+        WHERE employee_id = p_empid;
+    END IF;
+END $$
+
+DELIMITER ;
+
+create procedure payroll_salary_calculator(p_empid int,p_joblevel varchar(5),OUT p_salary float)
+begin
+    declare p_id int;
+    declare TA double(10,2);
+    declare TD double(10,2);
+    declare b_sal int;
+    declare da double(5,2);
+    declare pf double(5,2);
+    select employee_id into p_id
+    from payroll_employee_details
+    where employee_id=p_empid;
+    if p_id is null then
+      set p_salary=-1;
+    else
+
+      select basic_salary,Da,Pf into b_sal,da,pf
+      from payroll_salary_details
+      where job_level=p_joblevel;
+      set TA=(da*b_sal*0.01);
+      set TD=(pf*b_sal*0.01);
+      set p_salary=b_sal+TA-TD;
+      update payroll_salary_slip_details
+      set total_allowance=TA,total_deduction=TD,total_salary=p_salary
+      where employee_id=p_empid;
+     end if;
+end;        
+   
+     
+   
+  
+
+

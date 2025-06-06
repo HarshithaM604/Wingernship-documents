@@ -1,0 +1,519 @@
+Here are the MySQL queries for the questions displayed in the images:
+
+1. Fetch column names and data types for the coupon_details table:
+
+SELECT COLUMN_NAME, DATA_TYPE 
+FROM INFORMATION_SCHEMA.COLUMNS 
+WHERE TABLE_NAME = 'coupon_details';
+
+2. Count rows and fetch auto-increment value for vehicle_details table:
+
+SELECT COUNT(*) AS total_rows 
+FROM vehicle_details;
+
+SELECT AUTO_INCREMENT 
+FROM INFORMATION_SCHEMA.TABLES 
+WHERE TABLE_NAME = 'vehicle_details';
+
+3. Customer with max fare in "solo" trip:
+
+select d.driver_name,avg(driver_rating) as avg_rating 
+from payment_details p 
+join booking_details b on p.booking_id=b.booking_id 
+join driver_details d on b.driver_id=d.driver_id 
+where b.type_of_travel like 'solo' and 
+p.fare=(select max(fare) from payment_details) 
+group by d.driver_id;
+
+4. First five customers who availed "Happy hours offer":
+
+mysql> select distinct b.customer_id
+    -> from booking_details b
+    -> join payment_details p on b.booking_id=p.booking_id
+    -> join coupon_details c on p.coupon_code=c.coupon_code
+    -> where c.description like 'Happy hours offer';
+Write a query to fetch the name of the customer, who has the longest journey hours for individual booking and has availed the ‘Welcome offer” coupon
+
+mysql> select c.customer_name
+    -> from customer_details c
+    -> join booking_details b on c.customer_id=b.customer_id
+    -> join payment_details p on b.booking_id=p.booking_id
+    -> join coupon_details c on p.coupon_code=c.coupon_code
+    -> where c.description like 'Welcome offer' and
+    -> p.journey_duration=(select MAX(journey_duration) from payment_details);
+
+Write a query to fetch the booking id of the customer, whose name contains ‘imb’ (perform case-insensitive match)
+
+SELECT b.booking_id  FROM booking_details b JOIN customer_details c ON b.customer_id = c.customer_id WHERE LOWER(c.customer_name) LIKE '%imb%';
+
+Write a query to fetch the vehicle model of the driver, who has ‘B’ or ‘G’ as the 3rd letter along with ‘G’ or ‘P’ as the 7th letter in their license
+SELECT v.vehicle_model  FROM vehicle_details v join driver_details d on v.driver_id=d.driver_id WHERE SUBSTRING(d.license_number, 3, 1) IN ('B', 'G')  AND SUBSTRING(d.license_number, 7, 1) IN ('G', 'P');
+
+Write a query to fetch the name of the driver, who has the highest difference between the date of registration and the latest booking
+SELECT d.driver_name  FROM driver_details d JOIN booking_details b ON d.driver_id = b.driver_id GROUP BY d.driver_id ORDER BY DATEDIFF(MAX(b.date_of_booking), d.date_of_registartion) DESC LIMIT 1;
+
+Write a query to fetch the month in which maximum cabs were booked
+SELECT MONTH(date_of_booking) AS month, COUNT(*) AS total_bookings FROM booking_details GROUP BY MONTH(date_of_booking) ORDER BY total_bookings DESC LIMIT 1;
+
+Write a query to fetch the name and average fare paid by the customer, whose average fare is maximum among other customers
+
+Write a query to fetch the latest booking done by the oldest customer of this portal, in the given format
+“booking_id#driver_name#customer_name#source#destination#booking_status”
+SELECT CONCAT('booking_id#', b.booking_id, '#driver_name#', d.driver_name, '#customer_name#', c.customer_name, '#source#', b.source, '#destination#', b.destination, '#booking_status#', b.booking_status) 
+AS formatted_result 
+FROM booking_details b 
+JOIN customer_details c ON b.customer_id = c.customer_id 
+JOIN driver_details d ON b.driver_id = d.driver_id 
+WHERE c.date_of_registration = (SELECT MIN(date_of_registration) FROM customer_details) 
+ORDER BY b.date_of_booking 
+DESC LIMIT 1;
+
+Write a query to fetch the total fare earned for each payment type and coupon code
+ SELECT p.payment_type, p.coupon_code, SUM(p.fare) AS total_fare FROM payment_details p GROUP BY p.payment_type, p.coupon_code;
+
+Write a query to fetch the id and name of the driver, whose total fare is less than the average fare of all the bookings
+mysql> select d.driver_id,d.driver_name
+    -> from driver_details d
+    -> join booking_details b on d.driver_id=b.driver_id
+    -> join payment_details p on b.booking_id=p.booking_id
+    -> group by b.driver_id
+    -> having SUM(p.fare)<
+    -> (select AVG(fare) from payment_details);
+
+Write a query to fetch the name of the driver, who has least total fare earned
+select d.driver_name,SUM(p.fare) as total_fare 
+from driver_details d 
+join booking_details b on d.driver_id=b.driver_id 
+join payment_details p on b.booking_id=p.booking_id 
+group by b.driver_id 
+order by total_fare
+ASC limit 1;
+
+Write a query to fetch the total bookings done in the last 6 months
+ SELECT COUNT(*) AS total_bookings 
+FROM booking_details 
+WHERE date_of_booking >= DATE_SUB(NOW(), INTERVAL 6 MONTH);
+
+Write a query to fetch the description of the coupon, which is going to expire in the next month and the total number of users, who has availed it
+SELECT c.description, COUNT(p.customer_id) AS total_users_availed
+FROM coupon_details c
+JOIN payment_details b ON c.coupon_code = b.coupon_code
+join booking_details p on b.booking_id=p.booking_id
+WHERE MONTH(c.expiry_date) = MONTH(CURRENT_DATE + INTERVAL 1 MONTH)
+AND YEAR(c.expiry_date) = YEAR(CURRENT_DATE)
+GROUP BY c.coupon_code, c.description;
+
+
+Write a query to generate a report with name of the driver, average rating, and their category, where the category is displayed based on the below conditions
+If the average rating is greater than or equal to 4.7, then the category is “Best”
+If the average rating is between 4.3 and 4.6, then the category is “Good”
+If the average rating is between 4.0 and 4.2 , then the category is “Above Average”
+If the average rating is between 3.5 and 3.9, then the category is “Average”
+Do not display, if the average rating is below 3.5
+
+SELECT d.driver_name, AVG(r.driver_rating) AS average_rating, 
+    CASE 
+        WHEN AVG(r.driver_rating) >= 4.7 THEN 'Best'
+        WHEN AVG(r.driver_rating) BETWEEN 4.3 AND 4.6 THEN 'Good'
+        WHEN AVG(r.driver_rating) BETWEEN 4.0 AND 4.2 THEN 'Above Average'
+        WHEN AVG(r.driver_rating) BETWEEN 3.5 AND 3.9 THEN 'Average'
+        ELSE NULL
+    END AS category
+FROM driver_details d
+JOIN booking_details b ON d.driver_id = b.driver_id
+join payment_details r on b.booking_id=r.booking_id
+GROUP BY d.driver_id
+HAVING average_rating >= 3.5;
+
+
+Write a query to fetch the distinct destination places that are booked
+SELECT DISTINCT destination FROM booking_details;
+
+
+Write a query to fetch the unique sources, which are not present as destination in any of the bookings
+SELECT DISTINCT source  
+FROM booking_details
+ WHERE source NOT IN 
+(SELECT DISTINCT destination FROM booking_details);
+
+
+mysql> DELIMITER //
+mysql>
+mysql> CREATE PROCEDURE update_charges_per_hour(
+    ->     IN p_driver_name VARCHAR(50),
+    ->     IN p_change_percentage FLOAT(5),
+    ->     IN p_change_status ENUM('I', 'D'),
+    ->     OUT p_out INT
+    -> )
+    -> BEGIN
+    ->     DECLARE v_charges_per_hour FLOAT(5);
+    ->     DECLARE v_new_charges FLOAT(5);
+    ->
+    ->     -- Check if driver exists
+    ->     IF (SELECT COUNT(*) FROM driver_details WHERE driver_name = p_driver_name) = 0 THEN
+    ->         SET p_out = -1; -- Driver not found
+    ->     ELSE
+    ->         -- Fetch current charges per hour
+    ->         SELECT v.charges_per_hour INTO v_charges_per_hour
+    ->         FROM vehicle_details v
+    ->         join driver_details d on v.driver_id=d.driver_id
+    ->         WHERE d.driver_name = p_driver_name;
+    ->
+    ->         -- Calculate new charges based on increase or decrease
+    ->         IF p_change_status = 'I' THEN
+    ->             SET v_new_charges = v_charges_per_hour + (v_charges_per_hour * p_change_percentage / 100);
+    ->             SET p_out = 1;
+    ->         ELSE
+    ->             SET v_new_charges = v_charges_per_hour - (v_charges_per_hour * p_change_percentage / 100);
+    ->             SET p_out = 2;
+    ->         END IF;
+    ->
+    ->         -- Update vehicle_details table
+    ->         UPDATE vehicle_details v
+    ->         join driver_details d on v.driver_id=d.driver_id
+    ->         SET charges_per_hour = v_new_charges
+    ->         WHERE d.driver_name = p_driver_name;
+    ->     END IF;
+    -> END //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>
+mysql> DELIMITER ;
+mysql> call update_charges_per_hour('Alex',12,'I',@p_out);
+
+delimiter//
+create procedure recharge_wallet1(in p_customer_id int,INOUT p_amount decimal(6,2))
+begin
+     declare v_final_amount decimal(6,2);
+     
+     if (select COUNT(*) from customer_details where customer_id=p_customer_id)=0 then
+       set p_amount=-1;
+     else
+       if p_amount<=0
+       then 
+          set p_amount=-2;
+       else
+         set v_final_amount=p_amount-(p_amount*5/100);
+         set v_final_amount=v_final_amount-(v_final_amount*2.5/100);
+         update customer_details 
+         set wallet=wallet+v_final_amount 
+         where customer_id=p_customer_id;
+        select wallet into p_amount
+        from customer_details where customer_id=p_customer_id;
+      end if;
+  end if;
+       
+end//
+delimiter ;
+
+
+4.update_coupons
+
+DELIMITER //
+
+CREATE PROCEDURE update_coupons()
+BEGIN
+    -- Update expiry date for expired coupons
+    UPDATE coupon_details
+    SET expiry_date = 
+        CASE 
+            WHEN DATEDIFF(CURDATE(), expiry_date) > 270 THEN DATE_ADD(CURDATE(), INTERVAL 70 DAY)
+            ELSE DATE_ADD(CURDATE(), INTERVAL 30 DAY)
+        END
+    WHERE expiry_date < CURDATE();
+
+    -- Adjust expiry date based on remaining days
+    UPDATE coupon_details
+    SET expiry_date = 
+        CASE 
+            WHEN DATEDIFF(expiry_date, CURDATE()) <= 10 THEN DATE_ADD(expiry_date, INTERVAL 15 DAY)
+            WHEN DATEDIFF(expiry_date, CURDATE()) <= 20 THEN DATE_ADD(expiry_date, INTERVAL 25 DAY)
+            ELSE expiry_date
+        END;
+END //
+
+DELIMITER ;
+
+5.Delete Booking
+=============================
+DELIMITER //
+
+CREATE PROCEDURE delete_booking(
+    IN p_booking_id VARCHAR(10),
+    OUT p_status INT
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+    BEGIN
+        -- If any error occurs, set p_status to -1
+        SET p_status = -1;
+    END;
+    
+    -- Attempt to delete the booking record
+    DELETE FROM booking_details WHERE booking_id = p_booking_id;
+
+    -- If successful, set p_status to 1
+    SET p_status = 1;
+END //
+
+DELIMITER ;
+
+6.Calculate_bill
+======================================================
+generate_new_id() function:
+ CREATE FUNCTION generate_new_id(p_option ENUM('B', 'P')) RETURNS VARCHAR(10)
+    -> DETERMINISTIC
+    -> BEGIN
+    ->     DECLARE v_latest_id VARCHAR(10);
+    ->     DECLARE v_numeric_part INT;
+    ->     DECLARE v_new_id VARCHAR(10);
+    ->
+    ->     -- Fetch latest ID based on the given option
+    ->     IF p_option = 'B' THEN
+    ->         SELECT booking_id INTO v_latest_id
+    ->         FROM booking_details
+    ->         ORDER BY booking_id DESC
+    ->         LIMIT 1;
+    ->
+    ->         -- Extract numeric part and increment
+    ->         SET v_numeric_part = CAST(SUBSTRING(v_latest_id, 3) AS UNSIGNED) + 1;
+    ->         SET v_new_id = CONCAT('BK', v_numeric_part);
+    ->
+    ->     ELSEIF p_option = 'P' THEN
+    ->         SELECT payment_id INTO v_latest_id
+    ->         FROM payment_details
+    ->         ORDER BY payment_id DESC
+    ->         LIMIT 1;
+    ->
+    ->         -- Extract numeric part and increment
+    ->         SET v_numeric_part = CAST(SUBSTRING(v_latest_id, 3) AS UNSIGNED) + 1;
+    ->         SET v_new_id = CONCAT('PK', v_numeric_part);
+    ->     END IF;
+    ->
+    ->     RETURN v_new_id;
+    -> END //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>
+mysql> DELIMITER ;
+mysql> SELECT generate_new_id('B'
+    -> );
++-----------------------+
+| generate_new_id('B'
+) |
++-----------------------+
+| BK108                 |
++-----------------------+
+1 row in set (0.00 sec)
+
+
+allocate_driver()
+=======================
+DELIMITER //
+
+CREATE FUNCTION allocate_driver1(
+    p_source VARCHAR(50),
+    p_destination VARCHAR(50),
+    p_type_of_travel ENUM('solo', 'pool'),
+    p_number_of_people INT
+) RETURNS VARCHAR(10)
+DETERMINISTIC
+BEGIN
+    DECLARE v_driver_id VARCHAR(10);
+    DECLARE v_available_seats INT;
+    DECLARE v_total_drivers INT;
+
+    -- If travel type is 'pool', check for an ongoing pool trip
+    IF p_type_of_travel = 'pool' THEN
+        -- Find a driver with an ongoing pool trip for the given source and destination
+        SELECT driver_id, (seating_capacity - current_passengers) INTO v_driver_id, v_available_seats
+        FROM driver_details
+        WHERE status = 'pooling'
+            AND source = p_source
+            AND destination = p_destination
+        ORDER BY current_passengers ASC
+        LIMIT 1;
+
+        -- If found and seats are available, return the driver_id
+        IF v_driver_id IS NOT NULL AND v_available_seats >= p_number_of_people THEN
+            RETURN v_driver_id;
+        END IF;
+
+        -- If no pool driver is available, allocate a new driver
+    END IF;
+
+    -- If solo travel OR no existing pool trip is available, find a solo driver
+    IF p_type_of_travel = 'solo' THEN
+        -- Find a driver who has recently completed a journey to the requested source
+        SELECT driver_id INTO v_driver_id
+        FROM driver_details
+        WHERE last_location = p_source AND status = 'available'
+        ORDER BY last_completed_time DESC
+        LIMIT 1;
+
+        -- If a driver is found, return the driver_id
+        IF v_driver_id IS NOT NULL THEN
+            RETURN v_driver_id;
+        END IF;
+    END IF;
+
+    -- If no driver was found, check for any available driver
+    SELECT driver_id INTO v_driver_id
+    FROM driver_details
+    WHERE status = 'available'
+    ORDER BY total_bookings ASC, average_rating DESC
+    LIMIT 1;
+
+    -- If no available driver is found, return -1
+    IF v_driver_id IS NULL THEN
+        RETURN '-1';
+    END IF;
+
+    -- Check seating capacity
+    SELECT seating_capacity INTO v_available_seats
+    FROM driver_details
+    WHERE driver_id = v_driver_id;
+
+    IF v_available_seats >= p_number_of_people THEN
+        RETURN v_driver_id;
+    ELSE
+        -- If insufficient seating, look for another driver with sufficient capacity
+        SELECT driver_id INTO v_driver_id
+        FROM driver_details
+        WHERE status = 'available'
+            AND seating_capacity >= p_number_of_people
+        ORDER BY total_bookings ASC, average_rating DESC
+        LIMIT 1;
+
+        -- If still no driver found, return -1
+        IF v_driver_id IS NULL THEN
+            RETURN '-1';
+        END IF;
+
+        RETURN v_driver_id;
+    END IF;
+END //
+
+DELIMITER ;
+
+
+
+1.UPDATE_WALLET
+
+mysql> delimiter //
+mysql> CREATE TRIGGER update_wallet
+    -> AFTER INSERT ON payment_details
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     IF NEW.payment_type = 'wallet' THEN
+    ->         UPDATE customer_details c
+    ->         join booking_details b on c.customer_id=b.customer_id
+    ->         join payment_details p on b.booking_id=p.booking_id
+    ->         SET c.wallet = c.wallet - NEW.fare
+    ->         WHERE p.payment_id=NEW.payment_id;
+    ->     END IF;
+    -> END;
+    -> //
+iter ;Query OK, 0 rows affected (0.14 sec)
+
+mysql> delimiter ;
+mysql> insert into payment_details values ('PK106','BK104',17,8,NULL,10,'wallet',4,NULL);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select *from customer_details;
++-------------+----------------+----------------------+----------------+------------------+---------------+--------+
+| customer_id | customer_name  | date_of_registration | customer_phone | customer_address | credit_points | wallet |
++-------------+----------------+----------------------+----------------+------------------+---------------+--------+
+|           1 | Ted Moseby     | 2024-12-19           |     9898989898 | Manhatten        |           110 |   NULL |
+|           2 | Sheldon Copper | 2024-12-29           |     8989898989 | Queens           |           230 |   NULL |
+|           3 | Jessy Pinkman  | 2025-01-08           |     7878787878 | Pomonok          |            80 |   NULL |
+|           4 | Billi Kimbler  | 2024-12-29           |     8787878787 | Brooklyn         |            90 | 489.00 |
++-------------+----------------+----------------------+----------------+------------------+---------------+--------+
+4 rows in set (0.01 sec)
+
+
+2.UPDATERATING
+DELIMITER //
+
+CREATE TRIGGER update_rating
+AFTER INSERT ON payment_details
+FOR EACH ROW
+BEGIN
+    DECLARE v_driver_id INT;
+    DECLARE avg_rating FLOAT;
+
+    SELECT b.driver_id 
+    INTO v_driver_id
+    FROM booking_details b
+    JOIN payment_details p ON b.booking_id = p.booking_id
+    WHERE p.payment_id = NEW.payment_id
+    LIMIT 1;
+
+    SELECT AVG(driver_rating) 
+    INTO avg_rating
+    FROM payment_details p
+    JOIN booking_details b ON p.booking_id = b.booking_id
+    WHERE b.driver_id = v_driver_id;
+
+    UPDATE driver_details
+    SET average_rating = avg_rating
+    WHERE driver_id = v_driver_id;
+END //
+
+DELIMITER ;
+
+
+3.UPGRADE_COUPON_DETAILS
+
+DELIMITER //
+
+CREATE TRIGGER upgrade_coupon_details1
+AFTER DELETE ON booking_details
+FOR EACH ROW
+BEGIN
+    DECLARE v_cancelled_count INT;
+    DECLARE v_coupon_code VARCHAR(50);
+    DECLARE v_expiry_date DATE;
+    DECLARE v_discount_percentage INT;
+
+    SELECT COUNT(*) 
+    INTO v_cancelled_count
+    FROM booking_details
+    WHERE source = OLD.source 
+    AND destination = OLD.destination
+    AND booking_status = 'cancelled';
+
+    IF v_cancelled_count > 3 THEN
+        SET v_coupon_code = CONCAT('OFFER', UPPER(LEFT(OLD.source, 2)), UPPER(LEFT(OLD.destination, 2)));
+        SET v_expiry_date = DATE_ADD(CURDATE(), INTERVAL 5 DAY);
+        SET v_discount_percentage = v_cancelled_count * 3;
+
+        IF EXISTS (SELECT 1 FROM coupon_details WHERE coupon_code = v_coupon_code) THEN
+            CALL update_coupons(v_coupon_code, v_discount_percentage, v_expiry_date);
+        ELSE
+            INSERT INTO coupon_details (coupon_code, expiry_date, description, discount_percentage)
+            VALUES (v_coupon_code, v_expiry_date, 'Claim maximum offers using this coupon', v_discount_percentage);
+        END IF;
+    END IF;
+END //
+
+DELIMITER ;
+
+delete from booking_details where booking_id='BK104';
+select*from coupon_details;
+//new coupon will be added with expirydate 5 days from today and dicountage
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

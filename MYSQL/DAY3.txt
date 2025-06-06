@@ -1,0 +1,148 @@
+JOINS:
+Natural joins:
+  3tables 5 common columns 
+natural join with using clause
+select */columns from table1 join table2 using(commoncolname);
+
+
+mysql> create table y1(c1 int,c2 int,c3 int);
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> create taboe y2(c1 int,c2 int,c30 int);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'taboe y2(c1 int,c2 int,c30 int)' at line 1
+mysql> create table y2(c1 int,c2 int,c30 int);
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> select *from y1 join y2 using(c1);
+Empty set (0.00 sec)
+
+mysql> insert into y1 values(10,20,30),(20,30,40),(40,50,60);
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> insert into y2 values(10,20,30),(20,30,40),(30,40,50);
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select *from y1 join y2 using(c1);
++------+------+------+------+------+
+| c1   | c2   | c3   | c2   | c30  |
++------+------+------+------+------+
+|   10 |   20 |   30 |   20 |   30 |
+|   20 |   30 |   40 |   30 |   40 |
++------+------+------+------+------+
+2 rows in set (0.00 sec)
+
+mysql> select *from y1 join y2 using(c2);
++------+------+------+------+------+
+| c2   | c1   | c3   | c1   | c30  |
++------+------+------+------+------+
+|   20 |   10 |   30 |   10 |   30 |
+|   30 |   20 |   40 |   20 |   40 |
++------+------+------+------+------+
+2 rows in set (0.00 sec)
+
+mysql> select *from y1 join y2 using(c1,c2);
++------+------+------+------+
+| c1   | c2   | c3   | c30  |
++------+------+------+------+
+|   10 |   20 |   30 |   30 |
+|   20 |   30 |   40 |   40 |
++------+------+------+------+
+2 rows in set (0.01 sec)
+
+mysql> select c1 from y1 join y2 using(c1);
++------+
+| c1   |
++------+
+|   10 |
+|   20 |
++------+
+2 rows in set (0.00 sec)
+
+mysql> select c2 from y1 join y2 using(c2);
++------+
+| c2   |
++------+
+|   20 |
+|   30 |
++------+
+2 rows in set (0.00 sec)
+
+mysql> select *from y1 join y2 on (y1.c1=y2.c1);
++------+------+------+------+------+------+
+| c1   | c2   | c3   | c1   | c2   | c30  |
++------+------+------+------+------+------+
+|   10 |   20 |   30 |   10 |   20 |   30 |
+|   20 |   30 |   40 |   20 |   30 |   40 |
++------+------+------+------+------+------+
+2 rows in set (0.00 sec)
+
+mysql> select *from y1,y2 join y2 on (y1.c1=y2.c1);
+ERROR 1066 (42000): Not unique table/alias: 'y2'
+mysql> select *from y1,y2 where (y1.c1=y2.c1);
++------+------+------+------+------+------+
+| c1   | c2   | c3   | c1   | c2   | c30  |
++------+------+------+------+------+------+
+|   10 |   20 |   30 |   10 |   20 |   30 |
+|   20 |   30 |   40 |   20 |   30 |   40 |
++------+------+------+------+------+------+
+2 rows in set (0.00 sec)
+
+NON-EQUAL JOINS
+ select *from y1,y2 where (y1.c1>10);
++------+------+------+------+------+------+
+| c1   | c2   | c3   | c1   | c2   | c30  |
++------+------+------+------+------+------+
+|   40 |   50 |   60 |   10 |   20 |   30 |
+|   20 |   30 |   40 |   10 |   20 |   30 |
+|   40 |   50 |   60 |   20 |   30 |   40 |
+|   20 |   30 |   40 |   20 |   30 |   40 |
+|   40 |   50 |   60 |   30 |   40 |   50 |
+|   20 |   30 |   40 |   30 |   40 |   50 |
++------+------+------+------+------+------+
+6 rows in set (0.00 sec)
+
+OUTER JOIN
+================
+
+1.left
+2.right 
+3.full outer join[mysql will not support]
+
+VIEWS:--virtual table
+============================
+RDBMS==>view update some information from database is subjected to user to change foe example in infyme i can chnge my phone number 
+mysql> create view v1 as select first_name from employees;
+Query OK, 0 rows affected (0.00 sec)
+
+select @@autocommit;
+set autocommit=0
+then update table v1 set first_name='abc';
+then both employee and v1 table get updated
+rollback;--again come to same status
+desc information_schema.views;
+
+ create or replace view emp_sal_update(eid,sal) as select employee_id,salary from employees where salary>=10000 with check option;
+
+create or replace view emp_sal_update(eid,sal) as select employee_id,salary from employees where salary>=10000 with check option;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> update emp_sal_update set sal=500 where eid=100;
+ERROR 1369 (HY000): CHECK OPTION failed 'os_T582693.emp_sal_update'
+mysql> update emp_sal_update set sal=500 where eid=101;
+ERROR 1369 (HY000): CHECK OPTION failed 'os_T582693.emp_sal_update'
+mysql> update emp_sal_update set sal=10500 where eid=101;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> drop view if exists v1;
+Query OK, 0 rows affected (0.01 sec)
+
+
+
+
+
+
+
+

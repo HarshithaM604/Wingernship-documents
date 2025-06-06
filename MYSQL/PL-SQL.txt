@@ -1,0 +1,290 @@
+delimiter //
+create procedure p1(eid int)
+BEGIN
+   select *from employees where employee_id=eid;
+END;
+//
+delimiter ;--again resetting to defaulr delimiter (optional)
+if we strt with any symbol after delimiter then endprocedure with that symbol only 
+help
+
+mysql> call p1(100);
++-------------+------------+-----------+-----------------------------+--------------+------------+--------+----------+------------+---------------+
+| employee_id | first_name | last_name | email                       | phone_number | hire_date  | job_id | salary   | manager_id | department_id |
++-------------+------------+-----------+-----------------------------+--------------+------------+--------+----------+------------+---------------+
+|         100 | Steven     | King      | steven.king@sqltutorial.org | 515.123.4567 | 1987-06-17 |      4 | 24000.00 |       NULL |             9 |
++-------------+------------+-----------+-----------------------------+--------------+------------+--------+----------+------------+---------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+DEFUALT SYNTAX OF PROCEDURE:
+delimiter //
+create procedure precedurename(mode formalparam datatype(size),....)
+begin
+    declare all procedurallocalvariable datatype default value;
+    //ex; declare v1 int default 100;
+    declare allthecursorvariable with definition;
+    declare alltheexceptionhandlingvariable;
+    sql statements;
+ end;
+//
+
+1.MODE===>default mode name is called IN/in mode
+2.out/OUT mode
+3.in out/IN OUT mode
+in mode will take input value from calling environmenr
+outmode will return the values ti the calling environment  but any number of out variable we can use.--retun statement
+
+in-out will a single formalargument will act like in mode when it will get the value from the calling env
+after that inside the proc it will act as out mode variable.
+IN
+==========
+delimiter //
+create procedure add6(v1 int,IN v2 int)
+begin
+   select v1+v2;
+end//
+delimiter ;
+call add6(10,20);
+mysql> call add6(10,20);
++-------+
+| v1+v2 |
++-------+
+|    30 |
++-------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+OUT
+=======================
+
+delimiter //
+create procedure add3(v1 int,OUT v2 int)
+begin
+      set v2=v1+500;
+end//
+
+call add3(5000,@host);
+mysql> call add3(5000,@host);
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select @host;
++-------+
+| @host |
++-------+
+|  5500 |
++-------+
+1 row in set (0.00 sec)
+IN_OUT
+======================
+delimiter //
+create procedure add7(INOUT v1 int)
+begin
+      set v1=v1+500;
+end//
+delimiter ;
+
+mysql> set @x=0;---declare variable
+Query OK, 0 rows affected (0.00 sec)
+mysql> set @x=9000;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call add7(@x);
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select @x;
++------+
+| @x   |
++------+
+| 9500 |
++------+
+1 row in set (0.01 sec)
+
+delimiter //
+create procedure addmul(in v1 int,out v2 int,INOUT i int)
+begin  
+   set v2=2*v1;
+   set i=i+100;
+end//
+delimiter ;
+mysql> set @i=10;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call addmul(10,@wait,@i);
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select @i;
++------+
+| @i   |
++------+
+|  110 |
++------+
+1 row in set (0.00 sec)
+
+mysql> select @wait;
++-------+
+| @wait |
++-------+
+|    20 |
++-------+
+1 row in set (0.00 sec)
+
+QUESTIONS:
+======================================================================
+
+Find the salary of employees if no emp_no then return -1 otherwise return salary
+
+delimiter //
+create procedure Find_emp(empno int,out p_status int)
+begin 
+   declare sal decimal(8,2);
+   select salary into sal
+   from employees where employee_id=empno;
+   if sal is not null
+   then  
+       set p_status=sal;
+   else
+       set p_status=-1;
+    end if;
+end;
+//
+delimiter ;
+
+call Find_emp(101,@ps);
+select @ps;
++-------+
+| @ps   |
++-------+
+| 10500 |
++-------+
+
+//if salary is >10000 then update the salry to 2% increment
+
+delimiter //
+create procedure Update_Salary(empno int,out new_salary decimal(8,2),out p_status int)
+begin 
+   declare sal decimal(8,2);
+   select salary into sal
+   from employees where employee_id=empno;
+   if sal is not null
+   then 
+    set p_status=sal;
+    else
+      set p_status=-1;
+   end if;
+   if sal>10000
+   then  
+    set new_salary=sal+(0.02*sal); 
+   update employees set salary=new_salary where employee_id=empno;
+   end if;
+end;
+//
+delimiter ;
+call Update_Salary(10100,@new_salary,@ps);
+
+//ACCEPT write procedure accept deptno as input deptno is not avaialble return -2 otherwise display name of dept and no of people working in dept
+
+delimiter //
+
+create procedure getEmployeeCountByDept(in p_deptno int, out emp_count int)
+begin
+    declare dept_exists int;
+
+    select count(*) into dept_exists from departments where department_id = p_deptno;
+
+    if dept_exists = 0 then
+        set emp_count = -2; 
+    else
+        select count(*) INTO emp_count from employees where department_id = p_deptno;
+    end if;
+    
+end //
+delimiter ;
+call GetEmployeeCountByDept(1,@count);
+select @count; 
+
+cursor===>mysql buffer/Context area
+open cursor
+fetch each row from the cursor
+close
+
+drop procedure loc_dept_details;
+delimiter //
+create procedure loc_dept_details(in loc_id int)
+begin
+   declare dname varchar(30);
+   declare cr1 cursor for select department_name
+    from departments where location_id=loc_id;
+   
+   declare exit handler for not found
+   begin 
+       select 'cursor is empty';
+   end;
+   open cr1;
+   loop
+      fetch cr1 into dname;
+      select dname;
+    end loop;
+    close cr1;
+end;
+//
+delimiter ;
+
+call loc_dept_details(1700);
++----------------+
+| dname          |
++----------------+
+| Administration |
++----------------+
+1 row in set (0.00 sec)
+
++------------+
+| dname      |
++------------+
+| Purchasing |
++------------+
+1 row in set (0.00 sec)
+
++-----------+
+| dname     |
++-----------+
+| Executive |
++-----------+
+1 row in set (0.00 sec)
+
++---------+
+| dname   |
++---------+
+| Finance |
++---------+
+1 row in set (0.00 sec)
+
++------------+
+| dname      |
++------------+
+| Accounting |
++------------+
+1 row in set (0.00 sec)
+
++-----------------+
+| cursor is empty |
++-----------------+
+| cursor is empty |
++-----------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+=================================================================
+
+Show errors;--used to display error in procedure
+Executable statements in stored function can contain DDL and DML statements, but TCL statements are not supported.
+
+
+
+
+
+
+
+

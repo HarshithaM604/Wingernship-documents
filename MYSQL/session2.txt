@@ -1,0 +1,563 @@
+create table par1(c1 int) partition by range(c1) (partition v1 values less than (1000), partition v2 values less than maxvalue);
+
+ create table par2(c1 int) partition by list(c1)
+    -> (partition v1 values in (10,20,30));---by list partitions
+
+ create table par3(c1 int) partition by hash(c1) partitions 3;
+---parttion by hash
+
+based on requirement we have to choose partition
+
+select *from information_schema.partitions where table_name='par1';
+datatype must be integer,date(converted to year)
+mysql> create table pt1(c1 int primary key) partition by range(c1) (partition v1 values less than (1000), partition v2 values less than maxvalue);--primary key constraint also works here
+
+mysql> create table pt4(c1 int primary key,c2 int)  partition by list(c1) (partition v1 values in (500,1000));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> create table pt5(c1 int primary key,c2 int)  partition by list(c2) (partition v1 values in (500,1000));
+ERROR 1503 (HY000): A PRIMARY KEY must include all columns in the table's partitioning function (prefixed columns are not considered).
+--if primary key mentioned in table then that only used for partition not non primary key
+
+
+create table pt6(c1 int,c2 int,primary key(c1,c2))  partition by list(c2) (partition v1 values in (500,1000));
+Query OK, 0 rows affected (0.02 sec)
+
+create table pt7(c1 int,c2 int,c3 char,c4 int) partition by range columns(c1,c4)  (partition v1 values less than (500,1000));
+Query OK, 0 rows affected (0.02 sec)
+
+ create table pt8(c1 int,c2 int,c3 char,c4 int) partition by list columns(c1,c4)  (partition v1 values in((100,500),(200,800)));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> create table pt10(c100 int primary key)
+    -> partition by key() partitions 5;
+
+mysql> create table pt11(c100 int unique) partition by key() partitions 5;
+ERROR 1488 (HY000): Field in list of fields for partition function not found in table
+mysql> create table pt11(c100 int unique not null) partition by key() partitions 5;
+Query OK, 0 rows affected (1.70 sec)---it should be unique and not null if not primary key
+
+mysql> create table pt12(c100 int) partition by key() partitions 5;
+ERROR 1488 (HY000): Field in list of fields for partition function not found in table
+mysql> create table pt12(c100 int) partition by key(c100) partitions 5;
+Query OK, 0 rows affected (0.11 sec)---if not specified primary key in table then write the column name in key() bracket
+
+auto increment====>start with 1 increment by 1 maxvalue based on data type range
+it will execute only the primary key column,unique notnull,unique 
+
+ create table at1(c1 int unique auto_increment,c2 char);
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> select *from at1;
+Empty set (0.00 sec)
+
+mysql> insert into at1(c2) values('c'),('t'),('y');
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select *from at1;
++----+------+
+| c1 | c2   |
++----+------+
+|  1 | c    |
+|  2 | t    |
+|  3 | y    |
++----+------+
+3 rows in set (0.00 sec)
+
+
+mysql> insert into at1(c2) values('c'),('t'),('y');
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select *from at1;
++------+------+
+| c1   | c2   |
++------+------+
+|    1 | c    |
+|    2 | t    |
+|    3 | y    |
+| 1200 | k    |
+| 1201 | c    |
+| 1202 | t    |
+| 1203 | y    |
++------+------+
+7 rows in set (0.00 sec)
+
+mysql> insert into at1 values(15,'k');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into at1(c2) values('c'),('t'),('y');
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select *from at1;
++------+------+
+| c1   | c2   |
++------+------+
+|    1 | c    |
+|    2 | t    |
+|    3 | y    |
+|   15 | k    |
+| 1200 | k    |
+| 1201 | c    |
+| 1202 | t    |
+| 1203 | y    |
+| 1204 | c    |
+| 1205 | t    |
+| 1206 | y    |
++------+------+
+11 rows in set (0.00 sec)
+-----if new value entereed 15 is less than 1200 so it won't take take for increment if you enter >1200 then it will take
+example
+mysql> insert into at1 values(5000,'k');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into at1(c2) values('c'),('t'),('y');
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select *from at1;
++------+------+
+| c1   | c2   |
++------+------+
+|    1 | c    |
+|    2 | t    |
+|    3 | y    |
+|   15 | k    |
+| 1200 | k    |
+| 1201 | c    |
+| 1202 | t    |
+| 1203 | y    |
+| 1204 | c    |
+| 1205 | t    |
+| 1206 | y    |
+| 5000 | k    |
+| 5001 | c    |
+| 5002 | t    |
+| 5003 | y    |
++------+------+
+
+
+truncate--only data deleted not structure of table once truna=cated all auto_increment setted value goto default value
+
+mysql> truncate table at4;
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> insert into at4(c2) values('r'),('w'),('t');
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select *from at4;
++----+------+
+| c1 | c2   |
++----+------+
+|  1 | r    |
+|  2 | w    |
+|  3 | t    |
++----+------+
+3 rows in set (0.00 sec)
+
+go with help create table command in powershell to learn more
+
+
+DDL=====>ALTER=====>
+1.add---add columns and any key constraints
+2.modify--change datatype ,size,constraints
+3.drop
+4.rename--
+
+ alter table departments add column dname varchar(30);
+mysql> alter table departments add(loc_name varchar(40),mgr_id int);--to add multiple columns
+ alter table departments add c1 integer;---colun is optional
+
+mysql> alter table nt modify c1 null;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'null' at line 1
+mysql> alter table nt modify c1 int null;
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0--modify not null to null
+
+
+mysql> alter table nt modify c1 tinyint;
+ERROR 1264 (22003): Out of range value for column 'c1' at row 3
+mysql> alter table nt modify c1 bigint;
+Query OK, 3 rows affected (0.06 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+----based on size it modifeis because c1 is alrady int type we can modify oit to incresed sie datatype
+
+only one column we can modify
+
+if table is empty then we can reduce column datatype size
+
+alter table departments rename column d_id to dept_id;
+ alter table departments rename column loc_name to location,rename column dname to department_name;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0--multiple column rename works
+
+
+DROP
+
+ alter table departments drop column c1;--column is optional
+alter table departments drop department_name,drop mgr_id;--multiple columns dropped
+
+mysql> select CONSTRAINT_SCHEMA,CHECK_CLAUSE from information_schema.check_constraints;
+ select CONSTRAINT_SCHEMA,CHECK_CLAUSE from information_schema.check_constraints;
++-------------------+------------------+
+| CONSTRAINT_SCHEMA | CHECK_CLAUSE     |
++-------------------+------------------+
+| os_T582693        | (`e1` > 1000.25) |
+| os_T582693        | (`c1` <= 10000)  |
+| os_T582693        | (`c1` <= 10000)  |
++-------------------+------------------+
+3 rows in set (0.00 sec)
+
+mysql> select CONSTRAINT_NAME,CHECK_CLAUSE from information_schema.check_constraints;
++-----------------+------------------+
+| CONSTRAINT_NAME | CHECK_CLAUSE     |
++-----------------+------------------+
+| ck_chk_1        | (`e1` > 1000.25) |
+| uq1_chk_1       | (`c1` <= 10000)  |
+| uq2_chk_1       | (`c1` <= 10000)  |
++-----------------+------------------+
+3 rows in set (0.01 sec)
+
+mysql> SELECT * FROM INFORMATION_SCHEMA.table_constarints;
+ERROR 1109 (42S02): Unknown table 'TABLE_CONSTARINTS' in information_schema
+mysql> SELECT * FROM INFORMATION_SCHEMA.table_constraints;
++--------------------+--------------------+-----------------+--------------------+-------------------------------+-----------------+----------+
+| CONSTRAINT_CATALOG | CONSTRAINT_SCHEMA  | CONSTRAINT_NAME | TABLE_SCHEMA       | TABLE_NAME                    | CONSTRAINT_TYPE | ENFORCED |
++--------------------+--------------------+-----------------+--------------------+-------------------------------+-----------------+----------+
+| def                | performance_schema | PRIMARY         | performance_schema | processlist                   | PRIMARY KEY     | YES      |
+| def                | performance_schema | PRIMARY         | performance_schema | session_account_connect_attrs | PRIMARY KEY     | YES      |
+| def                | performance_schema | PRIMARY         | performance_schema | global_status                 | PRIMARY KEY     | YES      |
+| def                | performance_schema | PRIMARY         | performance_schema | session_status                | PRIMARY KEY     | YES      |
+| def                | performance_schema | PRIMARY         | performance_schema | global_variables              | PRIMARY KEY     | YES      |
+| def                | performance_schema | PRIMARY         | performance_schema | session_variables             | PRIMARY KEY     | YES      |
+| def                | performance_schema | PRIMARY         | performance_schema | persisted_variables           | PRIMARY KEY     | YES      |
+| def                | os_T582693         | c1              | os_T582693         | X                             | UNIQUE          | YES      |
+| def                | os_T582693         | c1              | os_T582693         | Y                             | UNIQUE          | YES      |
+| def                | os_T582693         | c1              | os_T582693         | M                             | UNIQUE          | YES      |
+| def                | os_T582693         | ck_chk_1        | os_T582693         | ck                            | CHECK           | YES      |
+| def                | os_T582693         | c1              | os_T582693         | uq1                           | UNIQUE          | YES      |
+| def                | os_T582693         | uq1_chk_1       | os_T582693         | uq1                           | CHECK           | YES      |
+| def                | os_T582693         | c1              | os_T582693         | uq2                           | UNIQUE          | YES      |
+| def                | os_T582693         | uq2_chk_1       | os_T582693         | uq2                           | CHECK           | YES      |
+| def                | os_T582693         | c1              | os_T582693         | pk                            | UNIQUE          | YES      |
+| def                | os_T582693         | c2              | os_T582693         | pk                            | UNIQUE          | YES      |
+| def                | os_T582693         | PRIMARY         | os_T582693         | pk1                           | PRIMARY KEY     | YES      |
+| def                | os_T582693         | PRIMARY         | os_T582693         | cpk                           | PRIMARY KEY     | YES      |
+| def                | os_T582693         | PRIMARY         | os_T582693         | mgr                           | PRIMARY KEY     | YES      |
+| def                | os_T582693         | mgr_ibfk_1      | os_T582693         | mgr                           | FOREIGN KEY     | YES      |
+| def                | os_T582693         | PRIMARY         | os_T582693         | loc                           | PRIMARY KEY     | YES      |
+| def                | os_T582693         | PRIMARY         | os_T582693         | dept                          | PRIMARY KEY     | YES      |
+| def                | os_T582693         | dept_ibfk_1     | os_T582693         | dept                          | FOREIGN KEY     | YES      |
+| def                | os_T582693         | PRIMARY         | os_T582693         | BOOKINGs                      | PRIMARY KEY     | YES      |
+| def                | os_T582693         | PRIMARY         | os_T582693         | pt1                           | PRIMARY KEY     | YES      |
+| def                | os_T582693         | PRIMARY         | os_T582693         | pt2                           | PRIMARY KEY     | YES      |
+| def                | os_T582693         | PRIMARY         | os_T582693         | pt4                           | PRIMARY KEY     | YES      |
+| def                | os_T582693         | PRIMARY         | os_T582693         | pt6                           | PRIMARY KEY     | YES      |
+| def                | os_T582693         | PRIMARY         | os_T582693         | pt10                          | PRIMARY KEY     | YES      |
+| def                | os_T582693         | c100            | os_T582693         | pt11                          | UNIQUE          | YES      |
+| def                | os_T582693         | c1              | os_T582693         | at3                           | UNIQUE          | YES      |
+| def                | os_T582693         | c1              | os_T582693         | at1                           | UNIQUE          | YES      |
+| def                | os_T582693         | PRIMARY         | os_T582693         | at4                           | PRIMARY KEY     | YES      |
++--------------------+--------------------+-----------------+--------------------+-------------------------------+-----------------+----------+
+34 rows in set (0.02 sec)
+
+mysql> desc table_constraints;
+ERROR 1146 (42S02): Table 'os_T582693.table_constraints' doesn't exist
+mysql> desc information_schema.table_constraints;
++--------------------+-------------+------+-----+---------+-------+
+| Field              | Type        | Null | Key | Default | Extra |
++--------------------+-------------+------+-----+---------+-------+
+| CONSTRAINT_CATALOG | varchar(64) | NO   |     | NULL    |       |
+| CONSTRAINT_SCHEMA  | varchar(64) | NO   |     | NULL    |       |
+| CONSTRAINT_NAME    | varchar(64) | YES  |     | NULL    |       |
+| TABLE_SCHEMA       | varchar(64) | NO   |     | NULL    |       |
+| TABLE_NAME         | varchar(64) | NO   |     | NULL    |       |
+| CONSTRAINT_TYPE    | varchar(11) | NO   |     |         |       |
+| ENFORCED           | varchar(3)  | NO   |     |         |       |
++--------------------+-------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> select CONSTRAINT_NAME,CONSTRAINT_TYPE from information_schema.table_constraints where table_name='ck';
++-----------------+-----------------+
+| CONSTRAINT_NAME | CONSTRAINT_TYPE |
++-----------------+-----------------+
+| ck_chk_1        | CHECK           |
++-----------------+-----------------+
+1 row in set (0.00 sec)
+
+mysql> select CONSTRAINT_NAME,CONSTRAINT_TYPE from information_schema.table_constraints where table_name='nt';
+Empty set (0.00 sec)
+
+mysql> select CONSTRAINT_NAME,CONSTRAINT_TYPE from information_schema.table_constraints where table_name='uq';
+Empty set (0.00 sec)
+
+mysql> select CONSTRAINT_NAME,CONSTRAINT_TYPE from information_schema.table_constraints where table_name='pk';
++-----------------+-----------------+
+| CONSTRAINT_NAME | CONSTRAINT_TYPE |
++-----------------+-----------------+
+| c1              | UNIQUE          |
+| c2              | UNIQUE          |
++-----------------+-----------------+
+2 rows in set (0.00 sec)
+alter table ck drop constraint ck_chk_1;--to remove constraint
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+======>help alter table
+
+ alter table ck add constraint my_check check(e1<5000);--add constarint
+
+
+mysql> select CONSTRAINT_NAME,CONSTRAINT_TYPE from information_schema.table_constraints where table_name='ck';
++-----------------+-----------------+
+| CONSTRAINT_NAME | CONSTRAINT_TYPE |
++-----------------+-----------------+
+| my_check        | CHECK           |
++-----------------+-----------------+
+1 row in set (0.00 sec)
+
+mysql> select CHECK_CLAUSE from information_schema.table_constraints where constraint_name='my_check';
+ERROR 1054 (42S22): Unknown column 'CHECK_CLAUSE' in 'field list'
+mysql> select CHECK_CLAUSE from information_schema.CHECK_constraints where constraint_name='my_check';
++---------------+
+| CHECK_CLAUSE  |
++---------------+
+| (`e1` < 5000) |
++---------------+
+1 row in set (0.01 sec)
+
+Hoe to remove primary key constraint
+
+alter table pk drop primary key;
+alter table pk add constraint primary key(c1);
+
+select CONSTRAINT_NAME,CONSTRAINT_TYPE from information_schema.table_constraints where table_name='uq1';
++-----------------+-----------------+
+| CONSTRAINT_NAME | CONSTRAINT_TYPE |
++-----------------+-----------------+
+| c1              | UNIQUE          |
+| uq1_chk_1       | CHECK           |
++-----------------+-----------------+
+2 rows in set (0.00 sec)
+
+mysql> alter table uq1 drop constraint c1;--todrop unique use column name only( c1)
+alter table df modify c1 varchar(10) default null;--we can change default value
+
+DROP:
+
+drop table tablename;
+
+create table r2(c100 int,foreign key(c100) references r1(c1) on delete cascade);--if i delete record from parent table child table also get deleted
+create table r4(c100 int,foreign key(c100) references r1(c1) on delete set null);
+
+ select *from r4;
++------+
+| c100 |
++------+
+| NULL |
+| NULL |
+|  400 |
++------+
+3 rows in set (0.00 sec)
+
+TRUNCATE command resets the AUTO_INCREMENT value of the table to 0, but when we insert new record into truncated table reset value will be incremented and 1 will be inserted.
+
+truncate wont delete structure of table
+
+Column levelConstraints:
+
+NOT NULL,UNIQUE,CHECK,PRIMARY KEY
+
+TABEL LEVEL CONSTRAINTS:
+CHECK,UNIQUE,COMPOSITE PRIMARY KEY,FOREIGN KEY
+
+mysql> create table emp_1(eid int primary key,mgr_id int foreign key(mgr_id) references emp_1(eid));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'foreign key(mgr_id) references emp_1(eid))' at line 1
+mysql> create table emp_1(eid int primary key,mgr_id int references emp_1(eid));
+Query OK, 0 rows affected (0.02 sec)
+mysql> insert into emp_1 values(1,100);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> drop table emp_1;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> create table emp_1(eid int primary key,mgr_id int, references emp_1(eid));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'references emp_1(eid))' at line 1
+mysql> create table emp_1(eid int primary key,mgr_id int,foreign key(mgr_id) references emp_1(eid));
+Query OK, 0 rows affected (0.02 sec)
+--only in mysql foreign key is table level contsraint but in oracle ,sql server,postgresql fk is column level also
+DML:
+=============================
+1.INSERT
+  a.table level insertion
+    insert into tablename values/value(sequenceoredercolumnd);
+  b.column level insertin
+    insert into tablename(notnull and primary key columns)
+
+using values
+      set
+      select we can insert
+
+INSERT INTO TABLE1 VALUES(SELECT *FROM TABLE);
+mysql> insert LOW_PRIORITY into p100 values(1,'a',current_date);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert HIGH_PRIORITY into p100 values(1,'a',current_date);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert IGNORE into p100 values(1,'a',current_date);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into p200 values(100),(100);
+ERROR 1062 (23000): Duplicate entry '100' for key 'p200.PRIMARY'
+mysql> insert into p200 values(100);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into p200 values(100);
+ERROR 1062 (23000): Duplicate entry '100' for key 'p200.PRIMARY'
+mysql> insert ignore into p200 values(100);
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql> show warnings;
++---------+------+----------------------------------------------+
+| Level   | Code | Message                                      |
++---------+------+----------------------------------------------+
+| Warning | 1062 | Duplicate entry '100' for key 'p200.PRIMARY' |
++---------+------+----------------------------------------------+
+1 row in set (0.00 sec)
+
+
+mysql> insert into p200 values(100) on duplicate key update c1=500;
+Query OK, 2 rows affected (0.00 sec)
+
+mysql> select *from p200;
++-----+
+| c1  |
++-----+
+| 500 |
++-----+
+1 row in set (0.00 sec)===>
+
+2.REPLACE
+Its syntax and types are same as insert command
+if there is no unique or pk constaint then it will act as insert command only
+
+
+mysql> create table p4500(c1 int primary key,c2 char);
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> replace into p4500 values(100,'u');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> replace into p4500 values(100,'u');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select *from p4500;
++-----+------+
+| c1  | c2   |
++-----+------+
+| 100 | u    |
++-----+------+
+1 row in set (0.00 sec)
+
+3.UPDATE
+  row level updation
+     update table set refcolname=newname where condition limit n;
+
+4.DELETE
+   delete from table_name where condition limit 1;
+   delete from table_name limit 1;
+even delete also delete data from table not table staructure same as truncat ebut difference is truncate is much faster than delete because delete go bydata
+
+
+TRANSACTION CONTROL LANGUAGE(TCL):
+=================================
+environmental variable--auto commit status
+select @@autocommit;
++--------------+
+| @@autocommit |
++--------------+
+|            1 |
++--------------+
+1 row in set (0.00 sec)
+1---true--each and every info stored in database permanenty
+0---false
+DML===>auto commit will execute when @@autocommit is 1
+1.COMMIT
+a.implicit commit--
+   DDL====>create,alter,drop,truncate 
+   DCL====>grant,revoke
+b.explicit commit--most time it occurs ex in UPI payment
+  end user has to comit command like submit or pay
+2.ROLLBACK--after giving rollback it goto afetr last commit
+  implicit==any network failure
+  explicit==by clicking cancel
+3.SAVEPOINT
+  ----used by developers only not by end users
+savepoint s1;
+savepoint s2;
+rollback to s1;---to save updation afetr evry query
+
+
+select is a command--in mysql,sqllite
+mysql> select 'we need a break';
++-----------------+
+| we need a break |
++-----------------+
+| we need a break |
++-----------------+
+1 row in set (0.00 sec)
+
+mysql> select 10<20;
++-------+
+| 10<20 |
++-------+
+|     1 |
++-------+
+1 row in set (0.00 sec)
+---select is not useful for this type of action so we use it in
+
+1.From clause
+2.where clause
+3.group by
+4.having
+5.order by
+
+Selection
+Projection
+    select colname from tablename;
+Restriction
+     select */user or colname as aliasname from tablename where condition;
+Join
+     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

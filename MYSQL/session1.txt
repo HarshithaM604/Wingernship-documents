@@ -1,0 +1,270 @@
+mysql -u T582693 -p#Infy123 -A os_T582693
+
+mysql -u T582693 -p#Infy123
+use os_T582693
+Database changed
+select database()
+
+create table t1(c1 int,c2 float,c3 date);
+describe t1;or desc t1;
+unique can take n number of null values because null is not value
+
+select current_date;
++--------------+
+| current_date |
++--------------+
+| 2025-03-19   |
++--------------+
+1 row in set (0.00 sec)
+
+mysql> select current_timestamp;
+
+mysql> insert into M values(current_timestamp);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into M values(current_timestamp);
+Query OK, 1 row affected (0.01 sec)
+
+if column is current_timestamp then no error for unique constarint
+
+create table if not exists t1(c2 varchar(10));
+show warnings;---stored in log file
+mysql> create table $(c1 int);
+Query OK, 0 rows affected, 1 warning (0.02 sec)
+
+mysql> create table _(c1 int);
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> create table 1(c1 int);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1(c1 int)' at line 1
+max length of column -255characters
+
+table and column name can be same
+
+tinyint   0-255 -128-127
+smallint
+int
+bigint
+
+float
+decimal bydefaul take 10,0 if i give more than this get truncated no error
+
+
+mysql> create table T500(c1 float,c2 decimal);
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> desc T500;
++-------+---------------+------+-----+---------+-------+
+| Field | Type          | Null | Key | Default | Extra |
++-------+---------------+------+-----+---------+-------+
+| c1    | float         | YES  |     | NULL    |       |
+| c2    | decimal(10,0) | YES  |     | NULL    |       |
++-------+---------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> create table x1(c1 float);
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> insert into x1 value
+    -> (12345.1234567890);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> create table x3(c1 decimal);
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> insert into x3 value (1234567890.134);
+Query OK, 1 row affected, 1 warning (0.01 sec)
+
+mysql> show warnings;
++-------+------+-----------------------------------------+
+| Level | Code | Message                                 |
++-------+------+-----------------------------------------+
+| Note  | 1265 | Data truncated for column 'c1' at row 1 |
++-------+------+-----------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select *from x3;
++------------+
+| c1         |
++------------+
+| 1234567890 |
++------------+
+1 row in set (0.00 sec)
+
+mysql> create table x4(c1 decimal(5,2));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> insert into x4 value (23456);
+ERROR 1264 (22003): Out of range value for column 'c1' at row 1
+mysql> insert into x4 value (234.56);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into x4 values (2.333333);
+Query OK, 1 row affected, 1 warning (0.00 sec)
+
+mysql> select *from x4;
++--------+
+| c1     |
++--------+
+| 234.56 |
+|   2.33 |
++--------+
+2 rows in set (0.00 sec)
+
+mysql> insert into x4 values (546.128);
+Query OK, 1 row affected, 1 warning (0.00 sec)
+
+mysql> select *from x4;
++--------+
+| c1     |
++--------+
+| 234.56 |
+|   2.33 |
+| 546.13 |
++--------+
+3 rows in set (0.00 sec)
+
+mysql> create table acc(atype enum('Saving','Curernt'));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> desc acc;
++-------+--------------------------+------+-----+---------+-------+
+| Field | Type                     | Null | Key | Default | Extra |
++-------+--------------------------+------+-----+---------+-------+
+| atype | enum('Saving','Curernt') | YES  |     | NULL    |       |
++-------+--------------------------+------+-----+---------+-------+
+1 row in set (0.01 sec)
+
+mysql> insert into acc values(saving);
+ERROR 1054 (42S22): Unknown column 'saving' in 'field list'
+mysql> insert into acc values("saving");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into acc values("Saving");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select *from acc;
++--------+
+| atype  |
++--------+
+| Saving |
+| Saving |
++--------+
+2 rows in set (0.00 sec)
+
+mysql> create table df(c1 varchar(10) default 'boring');
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> desc df;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| c1    | varchar(10) | YES  |     | boring  |       |
++-------+-------------+------+-----+---------+-------+
+1 row in set (0.01 sec)
+
+mysql> insert into df values('abc');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select *from df;
++------+
+| c1   |
++------+
+| abc  |
++------+
+1 row in set (0.00 sec)
+
+mysql> insert into df values(default);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select *from df;
++--------+
+| c1     |
++--------+
+| abc    |
+| boring |
++--------+
+2 rows in set (0.00 sec)
+
+mysql> insert into df values();
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select *from df;
++--------+
+| c1     |
++--------+
+| abc    |
+| boring |
+| boring |
++--------+
+3 rows in set (0.00 sec)
+
+use information_schema;
+
+ select *from information_schema.tables;
+
+ select table_name,table_type from information_schema.tables;
+
+what we created come under systemtables
+
+select * from information_schema.tables where table_name='X';
+
+check and unique constraint accept null values
+
+ create table if not exists z1 like t1; to copy table t1 to z1 including constraint but not data
+
+create table tab2 as select *from t1;it copy data also but omit constraints
+
+mysql> create table if not exists pqr as select e1 from ck;
+Query OK, 4 rows affected (0.03 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select *from pqr;
++---------+
+| e1      |
++---------+
+| 1000.26 |
+|    NULL |
+|    2000 |
+|    2000 |
++---------+
+4 rows in set (0.01 sec)
+
+create database or schema if not exists db1;
+
+mysql> create table if not exists pqr as select e1 from ck;
+Query OK, 4 rows affected (0.03 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select *from pqr;
++---------+
+| e1      |
++---------+
+| 1000.26 |
+|    NULL |
+|    2000 |
+|    2000 |
++---------+
+4 rows in set (0.01 sec)
+mysql> create table if not exists pqr as select e1 from ck;
+Query OK, 4 rows affected (0.03 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> create table employee(empid int not null,slary float not null,ename varchar(30) not null) character set='cp850' collate='cp850_bin' comment='employee slary infrmation';
+Query OK, 0 rows affected (0.02 sec)
+#Partition
+
+create table m1(c1 int) partition by range(c1) (partition p1 values less than (100));
+
+create table emp(emp_id int primary key,ename varchar(30) not null,salary decimal(8,2) not null) partition by range(salary) (partition s1 values less than (10000), partition s2 values less than (20000), partition s3 values less than MAXVALUE);---WRONG
+mysql> create table emp(emp_id int,ename varchar(30) not null,salary int not null) partition by range(salary) (partition s1 values less than (10000), partition s2 values less than (20000), partition s3 values less than MAXVALUE);---RIGHT
+
+primary key should not be there and partition column should be int not float or decimal
+
+
+
+
+
+
+
+

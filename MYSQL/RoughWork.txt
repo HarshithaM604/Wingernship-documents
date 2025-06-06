@@ -1,0 +1,324 @@
+Here are the PL/SQL stored procedures based on the requirements from the images:
+
+
+---
+
+1. update_charges_per_hour Stored Procedure
+
+DELIMITER //
+
+CREATE PROCEDURE update_charges_per_hour(
+    IN p_driver_name VARCHAR(50),
+    IN p_change_percentage FLOAT(5),
+    IN p_change_status ENUM('I', 'D'),
+    OUT p_out INT
+)
+BEGIN
+    DECLARE v_charges_per_hour FLOAT(5);
+    DECLARE v_new_charges FLOAT(5);
+    
+    -- Check if driver exists
+    IF (SELECT COUNT(*) FROM driver_details WHERE driver_name = p_driver_name) = 0 THEN
+        SET p_out = -1; -- Driver not found
+    ELSE
+        -- Fetch current charges per hour
+        SELECT v.charges_per_hour INTO v_charges_per_hour 
+        FROM vehicle_details v
+        join driver_details d on v.driver_id=d.driver_id
+        WHERE d.driver_name = p_driver_name;
+
+        -- Calculate new charges based on increase or decrease
+        IF p_change_status = 'I' THEN
+            SET v_new_charges = v_charges_per_hour + (v_charges_per_hour * p_change_percentage / 100);
+            SET p_out = 1;
+        ELSE
+            SET v_new_charges = v_charges_per_hour - (v_charges_per_hour * p_change_percentage / 100);
+            SET p_out = 2;
+        END IF;
+
+        -- Update vehicle_details table
+        UPDATE vehicle_details v 
+        join driver_details d on v.driver_id=d.driver_id
+        SET charges_per_hour = v_new_charges
+        WHERE d.driver_name = p_driver_name;
+    END IF;
+END //
+
+DELIMITER ;
+
+
+---
+
+2. recharge_wallet Stored Procedure
+
+DELIMITER //
+
+CREATE PROCEDURE recharge_wallet(
+    IN p_customer_id INT,
+    INOUT p_amount DECIMAL(6,2)
+)
+BEGIN
+    DECLARE v_wallet DECIMAL(6,2);
+    DECLARE v_final_amount DECIMAL(6,2);
+
+    -- Check if customer exists
+    IF (SELECT COUNT(*) FROM customer_details WHERE customer_id = p_customer_id) = 0 THEN
+        SET p_amount = -1; -- Customer not found
+    ELSE
+        -- Check if amount is valid
+        IF p_amount <= 0 THEN
+            SET p_amount = -2; -- Invalid amount
+        ELSE
+            -- Deduct 5% portal charges
+            SET v_final_amount = p_amount - (p_amount * 5 / 100);
+            
+            -- Deduct 2.5% tax charges
+            SET v_final_amount = v_final_amount - (v_final_amount * 2.5 / 100);
+
+            -- Update wallet balance
+            UPDATE customer_details 
+            SET wallet = wallet + v_final_amount 
+            WHERE customer_id = p_customer_id;
+
+            -- Return updated wallet balance
+            SELECT wallet INTO p_amount FROM customer_details WHERE customer_id = p_customer_id;
+        END IF;
+    END IF;
+END //
+
+DELIMITER ;
+
+
+---
+
+3. book_cab Stored Procedure
+
+DELIMITER //
+
+CREATE PROCEDURE book_cab(
+    IN p_customer_id INT,
+    IN p_source VARCHAR(50),
+    IN p_destination VARCHAR(50),
+    OUT p_booking_id INT
+)
+BEGIN
+    DECLARE v_driver_id INT;
+    DECLARE v_new_booking_id INT;
+
+    -- Check if customer exists
+    IF (SELECT COUNT(*) FROM customer_details WHERE customer_id = p_customer_id) = 0 THEN
+        SET p_booking_id = -1; -- Customer not found
+    ELSE
+        -- Allocate driver (Assuming allocate_driver() assigns a driver)
+        CALL allocate_driver(p_source, v_driver_id);
+        
+        -- Generate new booking ID
+        CALL generate_new_id(v_new_booking_id);
+
+        -- Insert booking details
+        INSERT INTO booking_details (booking_id, customer_id, driver_id, source, destination, booking_status)
+        VALUES (v_new_booking_id, p_customer_id, v_driver_id, p_source, p_destination, 'Booked');
+
+        -- Return booking ID
+        SET p_booking_id = v_new_booking_id;
+    END IF;
+END //
+
+DELIMITER ;
+
+
+---
+
+These stored procedures fulfill the requirements stated in the images. Let me know if you need modifications!
+
+
+Here are the PL/SQL queries for the stored procedures based on the images:
+
+
+---
+
+Procedure 3: book_cab
+
+This procedure automates the cab booking process.
+
+CREATE OR REPLACE PROCEDURE book_cab(
+    p_customer_name IN VARCHAR2,
+    p_source IN VARCHAR2,
+    p_destination IN VARCHAR2,
+    p_type_of_travel IN VARCHAR2,
+    p_number_of_persons IN NUMBER,
+    p_out OUT VARCHAR2
+)
+AS
+    v_count NUMBER;
+    v_return_value NUMBER;
+    v_booking_id VARCHAR2(20);
+BEGIN
+    -- Check if customer exists
+    SELECT COUNT(*) INTO v_count FROM customer_details WHERE customer_name = p_customer_name;
+    
+    IF v_count = 0 THEN
+        p_out := 'Please register to book a cab';
+        RETURN;
+    END IF;
+
+    -- Call allocate_driver function
+    v_return_value := allocate_driver(p_source, p_destination, p_type_of_travel, p_number_of_persons);
+    
+    IF v_return_value = 1 THEN
+        p_out := 'Cabs are unavailable for the number of persons selected by you';
+    ELSIF v_return_value = 2 THEN
+        p_out := 'Currently no cabs are available';
+    ELSE
+        -- Generate booking ID
+        v_booking_id := generate_new_id('B');
+        
+        -- Insert into booking_details
+        INSERT INTO booking_details (booking_id, customer_name, source, destination, type_of_travel, number_of_persons, status)
+        VALUES (v_booking_id, p_customer_name, p_source, p_destination, p_type_of_travel, p_number_of_persons, 'Booked');
+        
+        p_out := 'Booking Successful!';
+    END IF;
+EXCEPTION
+    WHEN OTHERS THEN
+        p_out := 'Error occurred while booking';
+END book_cab;
+/
+
+
+---
+
+Procedure 4: update_coupons
+
+This procedure updates the expiry date of all coupons.
+
+CREATE OR REPLACE PROCEDURE update_coupons
+AS
+BEGIN
+    UPDATE coupons
+    SET expiry_date = expiry_date + INTERVAL '1' MONTH
+    WHERE expiry_date > SYSDATE;
+    
+    COMMIT;
+END update_coupons;
+/
+
+
+---
+
+Procedure 6: delete_booking
+
+This procedure deletes a booking and updates status.
+
+CREATE OR REPLACE PROCEDURE delete_booking(
+    p_booking_id IN VARCHAR2,
+    p_status OUT NUMBER
+)
+AS
+BEGIN
+    DELETE FROM booking_details WHERE booking_id = p_booking_id;
+    
+    IF SQL%ROWCOUNT > 0 THEN
+        p_status := 1; -- Deletion successful
+    ELSE
+        p_status := -1; -- Booking not found
+    END IF;
+EXCEPTION
+    WHEN OTHERS THEN
+        p_status := -1; -- Error handling
+END delete_booking;
+/
+
+
+---
+
+These procedures follow the conditions given in the images and implement error handling. Let me know if you need modifications!
+
+
+Here are the SQL triggers based on the provided image requirements:
+
+
+---
+
+Trigger 1: update_wallet
+
+This trigger deducts the booking fare from the customer's wallet when the payment type is "wallet".
+delimiter //
+CREATE TRIGGER update_wallet
+AFTER INSERT ON payment_details
+FOR EACH ROW
+BEGIN
+    IF NEW.payment_type = 'wallet' THEN
+        UPDATE customer_details c
+        join booking_details b on c.customer_id=b.customer_id
+        join payment_details p on b.booking_id=p.booking_id
+        SET c.wallet = c.wallet - NEW.fare
+        WHERE p.payment_id=NEW.payment_id;
+    END IF;
+END;
+//
+delimiter ;
+
+
+---
+
+Trigger 2: update_rating
+
+This trigger updates the average rating of the driver when a customer rates the driver.
+drop trigger if exists update_rating;
+delimiter //
+CREATE TRIGGER update_rating
+AFTER INSERT ON payment_details
+FOR EACH ROW
+BEGIN
+    UPDATE driver_details d1
+    join booking_details b1 on d1.driver_id=b1.driver_id
+    join payment_details p1 on b1.booking_id=p1.booking_id
+    SET d1.average_rating = (SELECT AVG(p.driver_rating) 
+                      FROM payment_details p
+                      join booking_details b on p.booking_id=b.booking_id
+                      join driver_details d on b.driver_id=d.driver_id
+                      WHERE p.payment_id = NEW.payment_id)
+    WHERE p1.payment_id = NEW.payment_id;
+END;
+delimiter ;
+
+---
+
+Trigger 3: upgrade_coupon_details
+
+This trigger inserts or updates coupons when a booking is canceled.
+
+CREATE TRIGGER upgrade_coupon_details
+AFTER DELETE ON booking_details
+FOR EACH ROW
+BEGIN
+    DECLARE cancelled_count INT;
+    DECLARE new_coupon_code VARCHAR(20);
+    
+    -- Count cancelled bookings for the same source and destination
+    SELECT COUNT(*) INTO cancelled_count
+    FROM booking_details
+    WHERE status = 'cancelled' AND source = OLD.source AND destination = OLD.destination;
+
+    IF cancelled_count > 3 THEN
+        -- Generate coupon code
+        SET new_coupon_code = CONCAT('OFFER', LEFT(OLD.source, 2), LEFT(OLD.destination, 2));
+        
+        -- Check if coupon already exists
+        IF NOT EXISTS (SELECT 1 FROM coupon_details WHERE coupon_code = new_coupon_code) THEN
+            -- Insert new coupon
+            INSERT INTO coupon_details (coupon_code, expiry_date, description, discount_percentage)
+            VALUES (new_coupon_code, DATE_ADD(CURDATE(), INTERVAL 5 DAY), 
+                    'Claim maximum offers using this coupon', cancelled_count * 3);
+        ELSE
+            -- If coupon exists, invoke stored procedure to update it
+            CALL update_coupons();
+        END IF;
+    END IF;
+END;
+
+
+---
+
+These triggers follow the given requirements. Let me know if you need modifications!
