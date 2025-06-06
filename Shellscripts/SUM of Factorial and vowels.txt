@@ -1,0 +1,71 @@
+SUM of Factorial
+---------------------------
+#!/bin/bash
+
+factorial() {
+  local n=$1
+  local result=1
+  local i
+
+  if [ "$n" -eq 0 ]; then
+    echo 1
+    return 0
+  fi
+
+  for ((i=1; i<=n; i++)); do
+    result=$((result * i))
+  done
+
+  echo "$result"
+  return 0
+}
+
+sum_of_factorials() {
+  local n=$1
+  local total=0
+  local i
+  local fact
+
+  for ((i=1; i<=n; i++)); do
+    fact=$(factorial "$i")
+    total=$((total + fact))
+  done
+
+  echo "The sum of factorials up to $n is: $total"
+  return 0
+}
+
+# Example usage
+n=5
+sum_of_factorials "$n"
+
+
+==============================================================================
+
+Vowels
+---------------------------------------------------------------------
+
+#!/bin/bash
+
+vowel_string() {
+  local input_string="$1"
+  local vowels=""
+
+  for ((i = 0; i < ${#input_string}; i++)); do
+    char="${input_string:$i:1}"
+    if [[ "$char" == [aeiouAEIOU] ]]
+    then
+        vowels+="$char"
+ fi
+  done
+  echo "$vowels"
+}
+
+
+
+while IFS= read -r name; do
+  vowel_result=$(vowel_string "$name")
+  echo "$vowel_result" >> names_vowel.txt
+done < names.txt
+
+echo "Vowel extraction complete. Results written to names_vowel.txt"

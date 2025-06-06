@@ -1,0 +1,140 @@
+#!/bin/bash
+
+FILE="employee.txt"
+
+echo "1. List only the employee names working in unit 'ETA':"
+grep ':ETA:' $FILE | cut -d':' -f2
+echo ""
+
+echo "2. List only the employee IDs and Names working as 'SE':"
+grep ':SE:' $FILE | cut -d':' -f1,2
+echo ""
+
+echo "3. List all the employee IDs who have joined in the year 2018:"
+grep '2018' $FILE | cut -d':' -f1
+echo ""
+
+echo "4. List all the employee IDs whose Unit name begins or ends with 'S':"
+grep -E ':S[^:]*:' $FILE | cut -d':' -f1  
+grep -E ':[^:]*S:' $FILE | cut -d':' -f1
+echo ""
+
+echo "5. Display the count of employees working for 'IMS' unit:"
+grep -c ':IMS:' $FILE
+echo ""
+
+echo "6. Display the Employee details of all those working in a location that has 'a' in its location name:"
+grep ':.*a.*:' $FILE
+echo ""
+
+echo "7. Display the Employee details of all those working in a location that ends with 'ore' in its location name:"
+grep ':.*ore:' $FILE
+echo ""
+
+echo "8. Count the number of blank records in the file:"
+grep -c '^$' $FILE
+echo ""
+
+echo "9. List only the employee names for whom the unit details are blank:"
+grep '::' $FILE | cut -d':' -f2
+echo ""
+
+echo "10. List employee IDs and designations of employees who are not working as 'PA':"
+grep -v ':PA:' $FILE | cut -d':' -f1,3
+echo ""
+
+echo "11. Count all the employees working in 'Mumbai' location:"
+grep ':Mumbai:' $FILE | wc -l
+echo ""
+
+
+[tr582693@cvreros1 ~]$ cat employees.txt
+EmpID:Name:Designation:UnitName:Location:DateofJoining:Salary
+1001:Thomson:SE:IVS:Mumbai:10-Feb-1999:60000
+1002:Johnson:TE::Bangalore:18-Jun-2000:50000
+1003:Jackson:DM:IMS:Hyderabad:23-Apr-1985:90000
+1004:BobGL::ETA:Mumbai:05-Jan-2004:55000
+1005:Alice:PA:::26-Aug-2014:25000
+1006:LilySE::IVS:Bangalore:17-Dec-2015:40000
+1007:Kirsten:PM:IMS:Mumbai:26-Aug-2014:45000
+1004:BobGL::ETA:Mumbai:05-Jan-2021:55000
+[tr582693@cvreros1 ~]$ grep ':ETA:' $FILE | cut -d':' -f2
+^C
+[tr582693@cvreros1 ~]$ grep ':ETA:' employees.txt | cut -d':' -f2
+BobGL
+BobGL
+[tr582693@cvreros1 ~]$ grep 'SE' employees.txt | cut -d':' -f1,2
+1001:Thomson
+1006:LilySE
+[tr582693@cvreros1 ~]$ grep 'SE' employees.txt | cut -d':' -f1,2|tr ':' ' '
+1001 Thomson
+1006 LilySE
+[tr582693@cvreros1 ~]$ grep '2018$' employees.txt | cut -d':' -f1
+[tr582693@cvreros1 ~]$ grep '2014$' employees.txt | cut -d':' -f1
+[tr582693@cvreros1 ~]$ grep '2014' employees.txt | cut -d':' -f1
+1005
+1007
+[tr582693@cvreros1 ~]$ grep -E ':S[^:]*:' $FILE | cut -d':' -f1
+
+^C
+[tr582693@cvreros1 ~]$ grep -E '^S[A-Z]*:' employees.txt | cut -d':' -f1
+[tr582693@cvreros1 ~]$ grep -E ':S[^:]*:' employess.txt | cut -d':' -f1
+grep: employess.txt: No such file or directory
+[tr582693@cvreros1 ~]$ grep -E ':S[^:]*:' employees.txt | cut -d':' -f1
+1001
+[tr582693@cvreros1 ~]$ grep -E ':S[^:]*:' employees.txt | cut -d':' -f1 ;grep -E ':[^:]*S:' employees.txt | cut -d':' -f
+1
+1001
+1001
+1003
+1006
+1007
+[tr582693@cvreros1 ~]$ grep -E ':S[^:]*:' employees.txt | cut -d':' -f1 ;grep -E ':[^:]*S:' employees.txt | cut -d':' -f1 ^C
+[tr582693@cvreros1 ~]$ grep -E ':[^:]*S:' employees.txt | cut -d':' -f1
+1001
+1003
+1006
+1007
+[tr582693@cvreros1 ~]$ grep -c ':IMS:' employees.txt
+2
+[tr582693@cvreros1 ~]$ grep ':.*a.*:' employees.txt
+EmpID:Name:Designation:UnitName:Location:DateofJoining:Salary
+1001:Thomson:SE:IVS:Mumbai:10-Feb-1999:60000
+1002:Johnson:TE::Bangalore:18-Jun-2000:50000
+1003:Jackson:DM:IMS:Hyderabad:23-Apr-1985:90000
+1004:BobGL::ETA:Mumbai:05-Jan-2004:55000
+1006:LilySE::IVS:Bangalore:17-Dec-2015:40000
+1007:Kirsten:PM:IMS:Mumbai:26-Aug-2014:45000
+1004:BobGL::ETA:Mumbai:05-Jan-2021:55000
+[tr582693@cvreros1 ~]$ grep ':.*ore:' employee.txt
+grep: employee.txt: No such file or directory
+[tr582693@cvreros1 ~]$ grep ':.*ore:' employees.txt
+1002:Johnson:TE::Bangalore:18-Jun-2000:50000
+1006:LilySE::IVS:Bangalore:17-Dec-2015:40000
+[tr582693@cvreros1 ~]$ grep -c '^$' employees.txt
+0
+[tr582693@cvreros1 ~]$ grep '::' employees.txt | cut -d':' -f2
+Johnson
+BobGL
+Alice
+LilySE
+BobGL
+[tr582693@cvreros1 ~]$ grep -v ':PA:' employees.txt | cut -d':' -f1,3
+EmpID:Designation
+1001:SE
+1002:TE
+1003:DM
+1004:
+1006:
+1007:PM
+1004:
+[tr582693@cvreros1 ~]$ grep ':Mumbai:' employees.txt | wc -l
+4
+[tr582693@cvreros1 ~]$ grep -E ':S[^:]*:|:[^:]*S:' employees.txt|cut -d':' -f1
+1001
+1003
+1006
+1007
+
+
+u cant use '^S" because it list all words start with S so use the above

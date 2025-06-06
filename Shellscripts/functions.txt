@@ -1,0 +1,60 @@
+#!/bin/bash
+calculate_sum()
+{
+sum=`expr $1 + $2 `
+return $sum
+}
+read -p "Eneter the value for a:" a
+read -p "Enter the value of b: " b
+calculate_sum $a $b
+echo $?
+
+
+
+#!/bin/bash
+validate_name()
+{
+        echo $1>>name
+        grep -P "^[A-Z][a-z]{3,}$" name
+        if [ $? -eq 1 ]
+        then echo "Invalid name"
+        else echo "Valid name"
+        fi
+}
+read -p "Enter name" name
+validate_name $name
+
+using grep
+
+#!/bin/bash
+validate_name()
+{
+        echo $1>>name
+        echo $2>>email
+        grep -P "^[A-Z][a-z]{3,}$" name
+        if [ $? -eq 1 ]
+        then
+        echo "Invalid name"
+        else
+                echo "Valid name"
+                grep -P "^[A-Za-z0-9_.]+@[ A-Za-z0-9]+\.(com|in)$" email
+                if [ $? -eq 1 ];then
+                        echo "Invalid email"
+                else
+                        echo "valid mail"
+                fi
+
+        fi
+}
+read -p "Enter name" name
+read -p "Enter email" email
+validate_name $name $email
+
+
+
+
+
+
+
+
+

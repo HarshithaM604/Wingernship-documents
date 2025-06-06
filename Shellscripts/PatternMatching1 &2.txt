@@ -1,0 +1,83 @@
+        Display login IDs with terminal numbers of users logged into the server: 
+	who
+	Given a login ID, count the number of times that user logged in: 
+        who|grep "582693"|wc -l
+	Display the count of directories in the present working directory: 
+	ls -l | grep '^d' | wc -l
+	Display all lines in a file ending with a semicolon: 
+	grep ';$' Login
+	Count lines not ending with a semicolon: 
+	grep -vc ';$' Login
+
+
+
+[tr582693@cvreros1 ~]$ who|wc -l
+74
+[tr582693@cvreros1 ~]$ who|grep "582693"|wc -l
+1
+[tr582693@cvreros1 ~]$ ls -l | grep '^d' | wc -l
+7
+[tr582693@cvreros1 ~]$ grep ';$' employee
+[tr582693@cvreros1 ~]$ grep ';$' Login
+Raktim#123Infy#10-08-1992#Bangalore#8989898998#Raktim_talukdar@infosys.com;
+[tr582693@cvreros1 ~]$ grep -v ';$' Login
+LoginID#Passwd#DateOfBirth#Location#Mobile#Email
+Rajaravi#ETA@123#18-09-1993#Delhi#8888888888#raja.ravi@infosys.com
+Rajesh#Infy123#16-08-1990#Chennai#9999999999#Rajesh@infosys.com
+Aravind#Dell123#12-08-1993#Hyderabad#7878787890#Aravind.raghavan@infosys.com
+Sankavi#InfyDell#14-09-1992#Mumbai#7777777777#vidya@infosys.com
+
+	Display employee with highest experience (last column): 
+	sort -t '#' -k5,5nr employee.txt | head -1
+	Display employees whose first name has more than 6 characters: 
+cut -d '#' -f3 employee |cut -d' ' -f1|grep -E '.{7,}'
+	Display two employees with least experience: 
+	sort -t '#' -k5,5n employee.txt | head -2
+	Display all repetitive years of experience values: 
+	cut -d '#' -f5 employee.txt | sort | uniq -d
+
+
+Sankavi#InfyDell#14-09-1992#Mumbai#7777777777#vidya@infosys.com
+[tr582693@cvreros1 ~]$ sort -t '#' -k5,5nr employee | head -1
+641357#Amrit_Mohanty#Amrit Mohanty#3#2
+[tr582693@cvreros1 ~]$ sort -t '#' -k5n employee.txt | head -2
+sort: cannot read: employee.txt: No such file or directory
+[tr582693@cvreros1 ~]$ sort -t '#' -nk5 employee.txt | head -2
+sort: cannot read: employee.txt: No such file or directory
+[tr582693@cvreros1 ~]$ sort -t '#' -nk5 employee | head -2
+EmpNo#Email#Name#JobLevel#Experience
+706209#Sankavi.Boopathy#Sankavi Boopathy#3#0.5
+[tr582693@cvreros1 ~]$ sort -t '#' -k5,5n employee | head -2
+EmpNo#Email#Name#JobLevel#Experience
+706209#Sankavi.Boopathy#Sankavi Boopathy#3#0.5
+[tr582693@cvreros1 ~]$ cut -d '#' -f5 employee | sort | uniq -d
+0.5
+1.5
+[tr582693@cvreros1 ~]$ cut -d '#' -f3 employee |grep -E '.{7,}'
+Amrit Mohanty
+Puneet Mishra
+Vikas Bharti
+Aravind Raghavan
+Sankavi Boopathy
+Raja Ravi
+[tr582693@cvreros1 ~]$ cut -d '#' -f3 employee |grep -E '^[A-B][a-b]{7,}'
+[tr582693@cvreros1 ~]$ cut -d '#' -f3 employee
+Name
+Amrit Mohanty
+Puneet Mishra
+Vikas Bharti
+Aravind Raghavan
+Sankavi Boopathy
+Raja Ravi
+[tr582693@cvreros1 ~]$ cut -d '#' -f3 employee |cut -d' ' -f1
+Name
+Amrit
+Puneet
+Vikas
+Aravind
+Sankavi
+Raja
+[tr582693@cvreros1 ~]$ cut -d '#' -f3 employee |cut -d' ' -f1|grep -E '.{7,}'
+Aravind
+Sankavi
+	

@@ -1,0 +1,189 @@
+create table new_order_details
+(item_no int primary key auto_increment,
+drug_id int not null,
+no_of_units int not null default 20,
+new_ordered_date date not null,
+foreign key(drug_id) references drug_details(drug_id))
+ENNGINE=INNODB AUTO_INCREMENT=101;
+delimiter //
+create procedure place_order(p_role varchar(20),p_password varchar(20),p_drug_id int,OUT p_success int)
+begin
+   declare quantity int;
+   if p_role!="manager" and p_password!="abc123"
+   then 
+      set p_success=-1;
+   else 
+      select drug_id,stock_in_hand 
+      from drug_details
+      where drug_id=p_drug_id and short_in_hand<=10;
+      if drug_id is null and stock_in_hand is null 
+      then 
+            set p_success=-2
+      else
+         select quantity_purchased into quantity
+         from sales_details
+         where drug_id=p_drug_id;
+         update new_order_details
+         set no_of_units=
+         CASE
+            when quantity>=20 then 50
+            when quantity<=19 then 20
+            else NULL
+         END
+         where drug_id=p_drug_id;
+        end if;      
+   end if;
+  insert into new_order_details(drug_id,no_of_units,new_ordered_date)
+  values(p_drug_id,no_of_units,current_date());
+end;
+delimiter ;
+delimiter //
+create trigger update_quantity
+after insert on sales_details
+for each row
+begin
+    update drug_details
+    set stock_in_hand=stock_in_hand-new.quantity_purchased
+    where drug_id=new.drug_id;
+    
+end;
+delimiter ;
+
+
+output_list=[]
+if n<=1:
+   output_list=[]
+else:
+   for i in range(1,11):
+       output="n*i"+"="+n*i
+       output_list.append(output)
+return output_list
+
+if not empid and not empname:
+     output_dictionary={}
+else:
+     for i in empid:
+         output_dictionary[i]=empname[i]
+return output_dictionary   
+       
+
+
+auto_generate_order_id(){
+   file="orderfood.txt"
+   order_id=$(tail -1 "$file"|cut -d"#" -f1|tr -d 'F')
+   if [ -z $order_id ];then
+      last_order_id=101
+   else
+      last_order_id=$((order_id+1))
+   return $last_order_id
+
+
+order_food{
+ customer_name=$1
+ food_name=$2
+ quantity_ordered=$3
+ if ! [[ $customer_name =~ [A-Z][a-z]{2,14} ]];then
+    return 4
+ fi
+ if ! grep -q "$food_name" "$file";then 
+      return 3
+ fi
+ order_id=$(auto_generate_id)
+ price=$(grep -i "$order_id" "$file"|cut -d"#" -f3)
+ amount=$(echo "$price * $quantity"|bc)
+ echo "F$order_id#$customer_name#$food_name#$quantity_ordered#$amount" >> "orderfood.txt"
+  return 5 
+
+CREATE TABLE sales_details(
+        sale_id int(11) PRIMARY KEY AUTO_INCREMENT,
+        drug_id int(11) NOT NULL,
+        quantity_purchased int(11) NOT NULL,
+        total_amount decimal(5,2) NOT NULL,
+        FOREIGN KEY(drug_id) REFERENCES drug_details(drug_id)
+)ENGINE=InnoDB,AUTO_INCREMENT = 1;
+insert into sales_details(drug_id,quantity_purchased,total_amount) values(202,7,245.00);
+insert into sales_details(drug_id,quantity_purchased,total_amount) values(204,5,200.00);
+insert into sales_details(drug_id,quantity_purchased,total_amount) values(201,10,100.00);
+insert into sales_details(drug_id,quantity_purchased,total_amount) values(205,5,300.00);
+insert into sales_details(drug_id,quantity_purchased,total_amount) values(203,10,150.00);
+insert into sales_details(drug_id,quantity_purchased,total_amount) values(206,10,500.00);
+insert into sales_details(drug_id,quantity_purchased,total_amount) values(204,15,600.00);
+insert into sales_details(drug_id,quantity_purchased,total_amount) values(201,8,80.00);
+insert into sales_details(drug_id,quantity_purchased,total_amount) values(202,10,350.00);
+insert into sales_details(drug_id,quantity_purchased,total_amount) values(206,12,600.00);
+
+
+
+-- INSERT QUERIES FOR new_order_details TABLE --
+
+source new_order_details.sql;
+
+INSERT INTO new_order_details(drug_id,no_of_units,new_ordered_date) VAlUES(201,20,CURRENT_DATE);
+INSERT INTO new_order_details(drug_id,no_of_units,new_ordered_date) VAlUES(206,50,CURRENT_DATE);
+
+CREATE TABLE drug_details(
+        drug_id int(11) PRIMARY KEY AUTO_INCREMENT,
+        drug_name varchar(20) NOT NULL,
+        stock_in_hand int(11) NOT NULL,
+        drug_price decimal(5,2) NOT NULL
+)ENGINE=InnoDB,AUTO_INCREMENT = 201;
+
+-- INSERT QUERIES FOR drug_details TABLE --
+
+CREATE TABLE drug_details(
+        drug_id int(11) PRIMARY KEY AUTO_INCREMENT,
+        drug_name varchar(20) NOT NULL,
+        stock_in_hand int(11) NOT NULL,
+        drug_price decimal(5,2) NOT NULL
+)ENGINE=InnoDB,AUTO_INCREMENT = 201;CREATE TABLE drug_details(
+        drug_id int(11) PRIMARY KEY AUTO_INCREMENT,
+        drug_name varchar(20) NOT NULL,
+        stock_in_hand int(11) NOT NULL,
+        drug_price decimal(5,2) NOT NULL
+)ENGINE=InnoDB,AUTO_INCREMENT = 201;   
+
+
+
+#function_1
+auto_generate_orderid()
+{
+   file="orderfood.txt"
+   order_id=$(tail -1 "$file"|cut -d"#" -f1|tr -d 'F')
+   if [ -z $order_id ];then
+      last_order_id=101
+   else
+      last_order_id=$((order_id+1))
+   fi
+   return $last_order_id
+}
+#function_2
+order_food()
+{
+file="foods.txt"
+file1="orderfood.txt"
+customer_name=$1
+ food_name=$2
+ quantity_ordered=$3
+ if ! [[ $customer_name =~ [A-Z][a-z]{2,14} ]];then
+    return 4
+ fi
+ if ! grep -i "^.*#$food_name#" "$file";then
+      return 3
+ fi
+ order_id=$(auto_generate_orderid)
+ order_data=$(grep -i "^.*#$food_name#[0-9]*\.[0-9]*$" "$file")
+ price=$(echo "$order_data" | cut -d "#" -f3)
+ amount=$(echo "$price * $quantity_ordered" | bc)
+ echo "F$order_id#$customer_name#$food_name#$quantity_ordered#$amount" >> "orderfood.txt"
+  return 5
+}
+#function_3
+
+1#Burger#45
+2#Sandwich#35
+3#Burrito#95
+4#Pasta#85
+
+F101#Newton#Burger#2#90
+F102#Shiv#Pasta#3#255  
+         

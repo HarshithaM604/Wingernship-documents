@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Function to extract vowels from a string
+vowel_string() {
+    local str=$1
+    echo "$str" | grep -o '[AEIOUaeiou]' | tr -d '\n'
+}
+while IFS= read -r name; do
+    vowels=$(vowel_string "$name")
+    echo "$vowels" >> names_vowel.txt
+done < names.txt
+
+echo "Vowel extraction completed. Check names_vowel.txt"

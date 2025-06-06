@@ -1,0 +1,47 @@
+C1000 Anil 200001 FD
+[tr582693@cvreros1 ~]$ cat Sample.txt
+C1000 Anil 100001 SB
+C1001 Vijaya 100002 SB
+C1001 Vijaya 200001 FD
+C1002 Gaythri 100003 SB
+C1000 Anil 200001 FD
+[tr582693@cvreros1 ~]$ cut -d ' ' -f1,2 Sample.txt>custInfo.txt
+[tr582693@cvreros1 ~]$ cat custInfo.txt
+C1000 Anil
+C1001 Vijaya
+C1001 Vijaya
+C1002 Gaythri
+C1000 Anil
+[tr582693@cvreros1 ~]$ cut -d ' ' -f1,4 Sample.txt>AccInfo.txt
+[tr582693@cvreros1 ~]$ cat AccInfo.txt
+C1000 SB
+C1001 SB
+C1001 FD
+C1002 SB
+C1000 FD
+[tr582693@cvreros1 ~]$ cut -d ' ' -f2,4 Sample.txt>AccInfo.txt
+[tr582693@cvreros1 ~]$ cat AccInfo.txt
+Anil SB
+Vijaya SB
+Vijaya FD
+Gaythri SB
+Anil FD
+[tr582693@cvreros1 ~]$ cat custInfo.txt AccInfo.txt>temp1
+[tr582693@cvreros1 ~]$ cat temp1
+C1000 Anil
+C1001 Vijaya
+C1001 Vijaya
+C1002 Gaythri
+C1000 Anil
+Anil SB
+Vijaya SB
+Vijaya FD
+Gaythri SB
+Anil FD
+[tr582693@cvreros1 ~]$ paste custInfo.txt AccInfo.txt>temp
+[tr582693@cvreros1 ~]$ cat temp
+C1000 Anil      Anil SB
+C1001 Vijaya    Vijaya SB
+C1001 Vijaya    Vijaya FD
+C1002 Gaythri   Gaythri SB
+C1000 Anil      Anil FD

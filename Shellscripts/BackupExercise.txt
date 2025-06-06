@@ -1,0 +1,75 @@
+
+3. Create a directory called back_up and archive the log file using tar
+mkdir back_up
+tar -cvf back_up/sample.tar sample.log
+To verify:
+ls -l back_up
+4. Create another archive using cpio
+ls sample.log | cpio -ov > sample.cpio
+To verify:
+ls -l sample.cpio
+5. Move both archive files into daily_backup
+mkdir daily_backup
+mv back_up/sample.tar sample.cpio daily_backup/
+To verify:
+ls -l daily_backup
+Let me know if you need any modifications!
+
+
+[tr582693@cvreros1 ~]$ cat > log
+/home/er111/Unix_Course/backup_directory/
+/home/er111/Unix_Course/backup_directory/application_files.tar.gz
+/home/er111/Unix_Course/backup_directory/Registration.dat.gz
+/home/er111/Unix_Course/backup_directory/web_access_log_
+/home/er111/Unix_Course/backup_directory/web_access_log_.log
+/home/er111/Unix_Course/backup_directory/file2
+/home/er111/Unix_Course/backup_directory/Registration.dat~
+/home/er111/Unix_Course/backup_directory/ratings.dat.gz
+/home/er111/Unix_Course/backup_directory/Registration.dat
+/home/er111/Unix_Course/backup_directory/ratings.dat
+/home/er111/Unix_Course/backup_directory/app_access_log.dat.gz
+/home/er111/Unix_Course/backup_directory/file1
+/home/er111/Unix_Course/backup_directory/application_log.log
+/home/er111/Unix_Course/backup_directory/web_access_log_20170801.log
+/home/er111/Unix_Course/backup_directory/product.dat.gz
+/home/er111/Unix_Course/backup_directory/web_access_log.log
+/home/er111/Unix_Course/backup_directory/Registration.dat~.gz
+[tr582693@cvreros1 ~]$
+[tr582693@cvreros1 ~]$ cat log
+/home/er111/Unix_Course/backup_directory/
+/home/er111/Unix_Course/backup_directory/application_files.tar.gz
+/home/er111/Unix_Course/backup_directory/Registration.dat.gz
+/home/er111/Unix_Course/backup_directory/web_access_log_
+/home/er111/Unix_Course/backup_directory/web_access_log_.log
+/home/er111/Unix_Course/backup_directory/file2
+/home/er111/Unix_Course/backup_directory/Registration.dat~
+/home/er111/Unix_Course/backup_directory/ratings.dat.gz
+/home/er111/Unix_Course/backup_directory/Registration.dat
+/home/er111/Unix_Course/backup_directory/ratings.dat
+/home/er111/Unix_Course/backup_directory/app_access_log.dat.gz
+/home/er111/Unix_Course/backup_directory/file1
+/home/er111/Unix_Course/backup_directory/application_log.log
+/home/er111/Unix_Course/backup_directory/web_access_log_20170801.log
+/home/er111/Unix_Course/backup_directory/product.dat.gz
+/home/er111/Unix_Course/backup_directory/web_access_log.log
+/home/er111/Unix_Course/backup_directory/Registration.dat~.gz
+[tr582693@cvreros1 ~]$ mkdir back_up
+[tr582693@cvreros1 ~]$ tar -cvf back_up/sample.tar sample.log
+tar: sample.log: Cannot stat: No such file or directory
+tar: Exiting with failure status due to previous errors
+[tr582693@cvreros1 ~]$ tar -cvf back_up/sample.tar log
+log
+[tr582693@cvreros1 ~]$ ls -l back_up
+total 12
+-rw-rw-r--. 1 tr582693 tr582693 10240 Mar 11 17:19 sample.tar
+[tr582693@cvreros1 ~]$ ls log | cpio -ov > sample.cpio
+log
+3 blocks
+[tr582693@cvreros1 ~]$ ls -l sample.cpio
+-rw-rw-r--. 1 tr582693 tr582693 1536 Mar 11 17:20 sample.cpio
+[tr582693@cvreros1 ~]$ mkdir daily_backup
+[tr582693@cvreros1 ~]$ mv back_up/sample.tar sample.cpio daily_backup/
+[tr582693@cvreros1 ~]$ ls -l daily_backup
+total 16
+-rw-rw-r--. 1 tr582693 tr582693  1536 Mar 11 17:20 sample.cpio
+-rw-rw-r--. 1 tr582693 tr582693 10240 Mar 11 17:19 sample.tar

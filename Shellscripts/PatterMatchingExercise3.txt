@@ -1,0 +1,77 @@
+	Display two least marks in FA2:
+	cut -d '#' -f3 employees.txt | sort -n | head -2
+	Get all marks in the 80s range scored in FA2:
+	cut -d '#' -f3 employees.txt | grep '^8[0-9]$'
+	Display employee numbers who have the same marks in FA1:
+        
+	cut -d '#' -f1,2 employees.txt | sort -t '#' -k2,2 | uniq -f1 -d
+        Display employee numbers who got maximum marks in FA1 and FA3:
+	sort -t '#' -k2,2nr employees.txt | head -2 | cut -d '#' -f1
+	sort -t '#' -k4,4nr employees.txt | head -1 | cut -d '#' -f1
+.	Display Employee Number and FA1 marks of the one who has the least marks in FA1:
+	sort -t '#' -k2,2n employees.txt | head -1 | cut -d '#' -f1,2
+        Display Employee Number and FA2 marks of the one who has the 3rd maximum marks in FA2:
+        sort -t '#' -k3,3nr marks | head -4|tail -1|cut -d'#' -f1,3
+
+
+[tr582693@cvreros1 ~]$ cat marks
+EmpNo#FA1#FA2#FA3
+641357#67#75#78
+678522#89#98#92
+670242#89#97#99
+661822#78#94#91
+706209#67#34#65
+706452#80#70#68
+[tr582693@cvreros1 ~]$ cut -d '#' -f3 marks | sort -n | head -2
+FA2
+34
+[tr582693@cvreros1 ~]$ cut -d '#' -f3 marks | sort -n | head -3
+FA2
+34
+70
+[tr582693@cvreros1 ~]$ cut -d '#' -f3 marks | grep '^8[0-9]$'
+[tr582693@cvreros1 ~]$ cut -d '#' -f2 marks | grep '^8[0-9]$'
+89
+89
+80
+[tr582693@cvreros1 ~]$ cut -d '#' -f1,2 marks | sort -t '#' -k2,2 | uniq -f1 -d
+641357#67
+[tr582693@cvreros1 ~]$ cut -d '#' -f1,2 marks | sort -t '#' -k2,2 | uniq -f1
+641357#67
+[tr582693@cvreros1 ~]$ cut -d '#' -f1,2 marks | sort -t '#' -k2 | uniq -f1 -d
+641357#67
+[tr582693@cvreros1 ~]$ cut -d '#' -f1,2 marks | uniq -f1 -d
+EmpNo#FA1
+[tr582693@cvreros1 ~]$ cut -d '#' -f1,2 marks | sort -t '#' -k2,2 | uniq -f1 -D
+641357#67
+706209#67
+661822#78
+706452#80
+670242#89
+678522#89
+EmpNo#FA1
+[tr582693@cvreros1 ~]$ cut -d '#' -f1,2 marks | sort -t '#' -k2,2 | uniq -f1 -D |head -2
+641357#67
+706209#67
+[tr582693@cvreros1 ~]$ sort -t '#' -k2,2nr employees.txt | head -2 | cut -d '#' -f1
+1001:Thomson:SE:IVS:Mumbai:10-Feb-1999:60000
+1002:Johnson:TE::Bangalore:18-Jun-2000:50000
+[tr582693@cvreros1 ~]$ sort -t '#' -k4,4nr employees.txt | head -1 | cut -d '#' -f1
+1001:Thomson:SE:IVS:Mumbai:10-Feb-1999:60000
+[tr582693@cvreros1 ~]$ sort -t '#' -k2,2nr marks | head -1 | cut -d '#' -f1 &&  sort -t '#' -k4,4nr marks | head -1 | cut -d '#' -f1
+670242
+670242
+[tr582693@cvreros1 ~]$ sort -t '#' -k2,2n marks | head -1 | cut -d '#' -f1,2
+EmpNo#FA1
+[tr582693@cvreros1 ~]$ sort -t '#' -k2,2n marks | head -2 | cut -d '#' -f1,2
+EmpNo#FA1
+641357#67
+[tr582693@cvreros1 ~]$ sort -t '#' -k3,3nr marks | head -4|tail -1 | cut -d '#' -f1,3
+641357#75
+[tr582693@cvreros1 ~]$ sort -t '#' -k3,3nr marks | head -4
+678522#89#98#92
+670242#89#97#99
+661822#78#94#91
+641357#67#75#78
+[tr582693@cvreros1 ~]$ sort -t '#' -k3,3nr marks | head -4|tail -1|cut -d'#' -f1,3
+641357#75

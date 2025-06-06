@@ -1,0 +1,46 @@
+1. Perform the following tasks:
+(1) Execute the command umask 0000
+umask 0000
+This sets the default file creation permissions to 777 (full permissions for everyone).
+(2) Create file1 and check permissions
+touch file1
+ls -l file1
+Since umask 0000 is set, file1 will have -rwxrwxrwx (full permissions for all).
+(3) Execute umask 0006
+umask 0006
+This means new files will have permissions of 771 (rwxrwx--x), removing write permissions for others.
+(4) Create file2 and check permissions
+touch file2
+ls -l file2
+You will see that file2 has -rwxrwx---, meaning no write permission for "others".
+(5) Manage file permissions so that group and others cannot modify new files
+chmod go-w file1 file2
+Now, group and others can read but not modify these files.
+(6) Manage permissions so that group and others have no access
+chmod go-rwx file1 file2
+Now, only the owner has access.
+________________________________________
+2. Set permissions for sample.txt
+touch sample.txt
+chmod u=rwx,g=rw,o=r sample.txt
+ls -l sample.txt
+This sets:
+•	User (u) = read, write, execute (rwx)
+•	Group (g) = read, write (rw)
+•	Others (o) = read (r)
+________________________________________
+3. Create dir1 and restrict deletion of sample.txt
+mkdir dir1
+mv sample.txt dir1/
+chmod +t dir1
+ls -ld dir1
+The +t (sticky bit) ensures only the owner can delete files inside.
+________________________________________
+4. Difference between chmod ugo=x and chmod ugo+x
+chmod ugo=x sample.txt
+ls -l sample.txt
+•	ugo=x removes read (r) and write (w) permissions, leaving only execute (x).
+chmod ugo+x sample.txt
+ls -l sample.txt
+•	ugo+x adds execute (x) permission but retains previous read/write permissions.
+Let me know if you need further clarifications!

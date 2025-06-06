@@ -1,0 +1,110 @@
+#!/bin/bash
+
+EMPLOYEE_FILE="Employee1.txt"
+
+calculate_tax() {
+    read -p "Enter employee salary: " salary
+    if ! [[ "$salary" =~ ^[0-9]+$ ]]; then
+        echo "Error: Invalid salary. Please enter a numeric value."
+        return 1
+    fi
+    tax=$((salary * 5 / 100))
+    echo "Tax: $tax"
+    return 0
+}
+
+read_employees() {
+    if [ ! -f "$EMPLOYEE_FILE" ]; then
+        echo "Error: File '$EMPLOYEE_FILE' does not exist."
+        return 2
+    elif [ ! -s "$EMPLOYEE_FILE" ]; then
+        echo "Error: File '$EMPLOYEE_FILE' is empty."
+        return 3
+    else
+        while IFS=, read -r id name salary; do
+            echo "ID: $id, Name: $name, Salary: $salary"
+        done < "$EMPLOYEE_FILE"
+        return 0
+    fi
+}
+
+insert_employee() {
+    read -p "Enter Employee ID: " id
+    read -p "Enter Employee Name: " name
+    read -p "Enter Employee Salary: " salary
+
+    if ! [[ "$salary" =~ ^[0-9]+$ ]]; then
+        echo "Error: Invalid salary. Please enter a numeric value."
+        return 4
+    fi
+
+    if grep -q "^$id," "$EMPLOYEE_FILE"; then
+        echo "Error: Duplicate ID."
+        return 5
+    fi
+
+    echo "$id,$name,$salary" >> "$EMPLOYEE_FILE"
+    echo "Employee inserted successfully."
+    return 0
+}
+
+update_employee() {
+    read -p "Enter ID of employee to update: " id
+    read -p "Enter new Name: " name
+    read -p "Enter new Salary: " salary
+
+    if ! [[ "$salary" =~ ^[0-9]+$ ]]; then
+        echo "Error: Invalid salary. Please enter a numeric value."
+        return 7
+    fi
+
+    if ! grep -q "^$id," "$EMPLOYEE_FILE"; then
+        echo "Error: ID not found."
+        return 6
+    fi
+
+    sed -i "/^$id,/c\\$id,$name,$salary" "$EMPLOYEE_FILE"
+    echo "Employee updated successfully."
+    return 0
+}
+
+delete_employee() {
+    read -p "Enter ID of employee to delete: " id
+
+    if ! grep -q "^$id," "$EMPLOYEE_FILE"; then
+        echo "Error: ID not found."
+        return 8
+    fi
+
+    sed -i "/^$id,/d" "$EMPLOYEE_FILE"
+    echo "Employee deleted successfully."
+    return 0
+}
+
+show_menu() {
+    echo "Select an operation:"
+    echo "1. Insert Employee"
+    echo "2. Update Employee"
+    echo "3. Delete Employee"
+    echo "4. Read Employees"
+    echo "5. Calculate Tax"
+    echo "6. Exit"
+    read -p "Enter your choice: " choice
+    echo
+    return "$choice"
+}
+
+while true; do
+    show_menu
+    choice=$?
+
+    case $choice in
+        1) insert_employee ;;
+        2) update_employee ;;
+        3) delete_employee ;;
+        4) read_employees ;;
+        5) calculate_tax ;;
+        6) echo "Exiting."; exit 0 ;;
+        *) echo "Invalid choice. Please try again." ;;
+    esac
+done

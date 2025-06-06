@@ -1,0 +1,63 @@
+read -p "Enter the user name" name
+c=`who|tr -s " "|cut -d " " -f 1,4|grep "$name"`
+echo $c
+
+
+read -p "file name" fname
+
+for x in `cat $fname`
+do
+        echo $x
+done
+
+
+read -p "Enter the file name" fname
+while read x
+do echo $x
+done < $fname
+
+declare -a arr
+echo "Enter the size of array"
+read s
+i=0
+while test $i -lt $s
+do
+        echo "enter elemet $i "
+read x
+arr[$i]=$x
+i=$((i+1))
+done
+echo "The array values: ${arr[@]}"
+echo "The array values: ${arr[*]}"
+echo "The array len ${#arr[@]}"
+
+declare -a arr
+echo "Enter the size of array"
+read s
+for(( i=0; i<$s; i++ ))
+do
+read x
+arr[$i]=$x
+done
+echo "The array values: ${arr[@]}"
+echo "The array values: ${arr[*]}"
+echo "The array len ${#arr[@]}"
+
+echo $0 $1 $2 @3 $4 $5 $6 $7 $8 $9 $10 $11
+
+
+i=0
+while test $i -lt $1
+do
+        if test `expr $i % 2` -eq 0
+        then
+        echo $i
+fi
+        i=`expr $i + 1`
+done
+
+
+
+
+
+

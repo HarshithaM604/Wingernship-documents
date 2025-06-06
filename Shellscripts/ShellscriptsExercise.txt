@@ -1,0 +1,90 @@
+# Task 1: Take user input and display formatted details
+read -p "Enter name: " name
+read -p "Enter employee number: " emp_num
+read -p "Enter job level: " job_level
+readonly emp_num
+echo -e "\nEmployee Details:"
+echo "Name: $name"
+echo "Employee Number: $emp_num"
+echo "Job Level: $job_level"
+
+# Task 2: Validate user inputs (email, phone, account)
+read -p "Enter email ID: " email
+read -p "Enter phone number: " phone
+read -p "Enter bank account number: " account
+
+email=$(echo "$email" | tr -d ' ')
+phone=$(echo "$phone" | tr -d ' ')
+account=$(echo "$account" | tr -d ' ')
+
+valid_email="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+valid_phone="^[0-9]{10}$"
+valid_account="^[0-9]{5}$"
+
+if [[ $email =~ $valid_email && $phone =~ $valid_phone && $account =~ $valid_account ]]; then
+    echo "All inputs are valid"
+else
+    echo "Some inputs are invalid"
+fi
+
+# Task 3: Store inputs in an array
+declare -a employee_details
+employee_details=("$email" "$phone" "$account")
+readonly employee_details
+echo "Employee Phone Number: ${employee_details[1]}"
+
+# Task 4: File and directory checks
+read -p "Enter file name: " filename
+if [ -e "$filename" ]; then
+    if [ -s "$filename" ]; then
+        echo "File exists and is not empty"
+    else
+        echo "File exists but is empty"
+    fi
+else
+    echo "File does not exist"
+fi
+
+# Task 5: Check if a number is prime
+read -p "Enter a number to check for prime: " num
+is_prime=1
+if [ "$num" -lt 2 ]; then
+    is_prime=0
+else
+    for ((i=2; i*i<=num; i++)); do
+        if ((num % i == 0)); then
+            is_prime=0
+            break
+        fi
+    done
+fi
+if [ "$is_prime" -eq 1 ]; then
+    echo "$num is a prime number"
+else
+    echo "$num is not a prime number"
+fi
+
+# Task 6: Check if a number is even or odd
+read -p "Enter a number: " num
+if (( num % 2 == 0 )); then
+    echo "$num is an even number"
+else
+    echo "$num is an odd number"
+fi
+
+# Task 7: Check if a user is logged in
+read -p "Enter username to check: " user
+if who | grep -q "$user"; then
+    echo "User $user is logged in"
+else
+    echo "User $user is not logged in"
+fi
+
+# Task 8: Display files and subdirectories of a given directory
+read -p "Enter directory name: " dir
+if [ -d "$dir" ]; then
+    ls -l "$dir"
+else
+    echo "Directory does not exist"
+fi
+

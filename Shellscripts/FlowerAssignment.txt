@@ -1,0 +1,41 @@
+#!/bin/bash
+FLOWERS_FILE="flowers.txt"
+ORDERS_FILE="orders.txt"
+auto_generate_orderid() {
+    if [ ! -s "$ORDERS_FILE" ]; then
+        echo "101" 
+        return
+    fi
+    
+    last_order_id=$(tail -1 "$ORDERS_FILE" | cut -d'#' -f1 | tr -d 'F')
+
+    if [[ -z "$last_order_id" ]]; then
+        echo "101"
+    else
+        echo $((last_order_id + 1))
+    fi
+}
+place_order() {
+    local customer_name="$1"
+    local flower_name="$2"
+    local quantity="$3"
+    if [[ ! "$customer_name" =~ ^[A-Z][a-z]{2,14}$ ]]; then
+        return 4  
+    fi
+    flower_data=$(grep -i "^.*#$flower_name#[0-9]*\.[0-9]*$" "$FLOWERS_FILE")
+    if [[ -z "$flower_data" ]]; then
+        return 3  
+    fi
+    price_per_stem=$(echo "$flower_data" | cut -d'#' -f3)
+    new_order_id=$(auto_generate_orderid)
+    order_id="F$new_order_id"
+
+    total_price=$(echo "$quantity * $price_per_stem" | bc)
+
+    echo "$order_id#$customer_name#$flower_name#$quantity#$total_price" >> "$ORDERS_FILE"
+
+    return 5  
+}
+
+place_order "Alice" "Rose" "12"
+echo "Status Code: $?"

@@ -1,0 +1,23 @@
+declare -i num1
+declare -i num2
+declare -i num3
+read -p "Enter numebers: " num1 num2 num3
+if [ $num1 -eq $num2 -a $num2 -eq $num3 ]
+then echo "All are equal"
+elif [ $num1 -eq $num2 -o $num2 -eq $num3 -o $num3 -eq $num1 ]
+then echo "Any 2 numbers are equal"
+else
+        if [ $num1 -gt $num2 ]
+        then if [ $num1 -gt $num3 ]
+        then echo "$num2 is greater"
+        else
+                echo "$num3 is greater"
+        fi
+else
+        if [ $num2 -gt $num3 ]
+        then echo "$num2 is greater"
+        else
+                echo "$num3 is greater"
+        fi
+fi
+fi
