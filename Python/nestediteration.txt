@@ -1,0 +1,23 @@
+def find_max(num1, num2):
+    if num1 >= num2:
+        return -1  # Invalid case when num1 is not less than num2
+
+    max_num = -1  # Initialize max_num with -1 in case no valid number is found
+
+    for num in range(num1, num2 + 1):
+        if 10 <= num <= 99 and num % 5 == 0:
+            # Calculate sum of digits without using map or list
+            sum_of_digits = 0
+            temp = num
+            while temp > 0:
+                sum_of_digits += temp % 10
+                temp //= 10
+
+            if sum_of_digits % 3 == 0:
+                max_num = max(max_num, num)
+
+    return max_num
+
+# Example Test Cases
+num = find_max(10, 15)
+print(num)  # Expected Output: 15 (if it satisfies the conditions)

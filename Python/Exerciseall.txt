@@ -1,0 +1,116 @@
+1. Rearranging Words at Even Positions
+def rearrange_sentence(sentence):
+    words = sentence.split()
+    for i in range(1, len(words), 2): 
+        consonants = ''.join([c for c in words[i] if c.lower() not in 'aeiou'])
+        vowels = ''.join([c for c in words[i] if c.lower() in 'aeiou'])
+        words[i] = consonants + vowels
+    return ' '.join(words)
+msg = "the sun rises in the east"
+print(rearrange_sentence(msg))  
+
+2. Count Number of Characters in a String
+def count_characters(s):
+    return len(s)
+print(count_characters("Hello World"))
+Output: 11
+
+
+3. Count Number of Words in a Sentence
+def count_words(sentence):
+    return len(sentence.split())
+print(count_words("I love Python and it is easy to learn"))
+
+4. Word Length Dictionary
+def words_count(sentence):
+    word_lengths = {}
+    for word in sentence.split():
+        length = len(word)
+        word_lengths[length] = word_lengths.get(length, 0) + 1
+    return word_lengths
+
+print(words_count("I love python and it is easy to learn"))  
+Output: {1:1, 4:2, 5:1, 3:1, 2:3, 6:1}
+
+5. Count Vowels, Consonants, and Other Characters
+def vowel_count(sentence):
+    vowels, consonants, others = 0, 0, 0
+    for ch in sentence:
+        if ch.isalpha():
+            if ch.lower() in 'aeiou':
+                vowels += 1
+            else:
+                consonants += 1
+        elif not ch.isspace():
+            others += 1
+    return {"vowels": vowels, "consonants": consonants, "others": others}
+
+print(vowel_count("I love python and it is easy to learn"))  
+ 
+6. Right Shift a Number
+def right_shift(num, n):
+    return num >> n  # Right bit shift operation
+
+print(right_shift(60, 2))  
+
+7. Check Strong Number
+import math
+
+def check_strong_number(num):
+    return num == sum(math.factorial(int(d)) for d in str(num))
+
+print(check_strong_number(145))  # Output: True
+
+
+8. Find Prime Numbers in a List
+def is_prime(n):
+    if n < 2:
+        return False
+    for i in range(2, int(n ** 0.5) + 1):
+        if n % i == 0:
+            return False
+    return True
+
+def prime_numbers(lst):
+    return [num for num in lst if is_prime(num)]
+
+print(prime_numbers([7, 9, 11, 13, 15, 20, 23]))  # Output: [7, 11, 13, 23]
+
+9. Find Common Characters Between Two Strings
+def find_common_characters(msg1, msg2):
+    common_chars = set(msg1.replace(" ", "")) & set(msg2.replace(" ", ""))
+    return "".join(sorted(common_chars)) if common_chars else -1
+
+print(find_common_characters("I like Python", "Java is a very popular language"))  '
+Output: lieyon
+
+
+10. Find Pairs of Numbers Adding Up to n
+def find_pairs_of_numbers(num_list, n):
+    count = 0
+    seen = set()
+    for num in num_list:
+        if (n - num) in seen:
+            count += 1
+        seen.add(num)
+    return count
+
+print(find_pairs_of_numbers([1, 2, 7, 4, 5, 6, 0, 3], 6))  
+
+11. Fix find_average Function
+def find_average(mark_list):
+    return sum(mark_list) / len(mark_list) if mark_list else 0
+
+print(find_average([70, 80, 90]))
+Output: 80.0
+
+
+12. Check Amicable Numbers
+def sum_of_divisors(num):
+    return sum(i for i in range(1, num) if num % i == 0)
+
+def check_amicable_numbers(num1, num2):
+    return sum_of_divisors(num1) == num2 and sum_of_divisors(num2) == num1
+
+print(check_amicable_numbers(220, 284))  
+Output: True

@@ -1,0 +1,89 @@
+Run Length Encoding
+def encode(message):
+    encoded_message = ""
+    i = 0
+    while i < len(message):
+        count = 1
+        while i + 1 < len(message) and message[i] == message[i + 1]:
+            count += 1
+            i += 1
+        encoded_message += str(count) + message[i]
+        i += 1
+    return encoded_message
+
+encoded_message = encode("AAABBBCCCCC")
+print(encoded_message)
+
+
+def calculate_bill_amount(gems_list, price_list, reqd_gems,reqd_quantity):
+   bill_amount=0
+   
+   #Write your logic here
+   for i in range(0,len(reqd_gems)):
+       found=0
+       for j in range(0,len(gems_list)):
+           if reqd_gems[i]==gems_list[j]:
+               found=1
+               bill_amount+=(price_list[j]*reqd_quantity[i])
+      
+       if(found==0):
+           bill_amount=-1
+           break
+   if bill_amount>30000:
+        bill_amount-=(0.05*bill_amount)
+   return bill_amount
+
+#List of gems available in the store
+gems_list=["Emerald","Ivory","Jasper","Ruby","Garnet"]
+#Price of gems available in the store. gems_list and price_list have one-to-one correspondence
+price_list=[1760,2119,1599,3920,3999]
+#List of gems required by the customer
+reqd_gems=["Ivory","Emerald","Garnet"]
+#Quantity of gems required by the customer. reqd_gems and reqd_quantity have one-to-one correspondence
+reqd_quantity=[3,10,12]
+bill_amount=calculate_bill_amount(gems_list, price_list, reqd_gems, reqd_quantity)
+print(bill_amount)
+
+
+ Find Next 15 Leap Years
+def find_leap_years(given_year):
+    list_of_leap_years = []
+    year = given_year
+    while len(list_of_leap_years) < 15:
+        if (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0):
+            list_of_leap_years.append(year)
+        year += 1
+    return list_of_leap_years
+
+list_of_leap_years = find_leap_years(2000)
+print(list_of_leap_years)
+
+
+from functools import cmp_to_key
+def compare(a, b):
+    return (int(b + a) - int(a + b))
+def create_largest_number(number_list):
+    number_list = list(map(str, number_list))
+    number_list.sort(key=cmp_to_key(compare))
+    return int("".join(number_list))
+number_list = [23, 34, 55]
+largest_number = create_largest_number(number_list)
+print(largest_number)
+
+
+child_id = (10, 20, 30, 40, 50)
+chocolates_received = [12, 5, 3, 4, 6]
+def calculate_total_chocolates():
+    return sum(chocolates_received)
+def reward_child(child_id_rewarded, extra_chocolates):
+    if extra_chocolates < 1:
+        print("Extra chocolates is less than 1")
+        return
+    if child_id_rewarded not in child_id:
+        print("Child id is invalid")
+        return
+    index = child_id.index(child_id_rewarded)
+    chocolates_received[index] += extra_chocolates
+    print(chocolates_received)
+print(calculate_total_chocolates())
+reward_child(20, 2)

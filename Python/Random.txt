@@ -1,0 +1,36 @@
+import random
+#program to genearte random password with length of 8
+small="qwhfjhjhdwiuoqiueoiuwei"
+upper=small.upper()
+symbol="124567890&%$@"
+all=small+upper+symbol
+password="".join(random.sample(all,8))
+print(password)
+
+import random
+name_lists=[1,2,3]
+print("Lottery winner",random.choice(name_lists))
+
+students = {
+    "Alice": [85, 90, 78, 92],
+    "Bob": [60, 75, 70, 65],
+    "Charlie": [95, 98, 100, 92],
+    "David": [50, 45, 60, 55]
+}
+grades = {}
+
+for student, marks in students.items():
+    average = sum(marks) / len(marks)  
+    if average >= 90:
+        grade = 'A'
+    elif average >= 80:
+        grade = 'B'
+    elif average >= 70:
+        grade = 'C'
+    elif average >= 60:
+        grade = 'D'
+    else:
+        grade = 'F'
+    
+    grades[student] = {'Average': average, 'Grade': grade}
+print(grades)

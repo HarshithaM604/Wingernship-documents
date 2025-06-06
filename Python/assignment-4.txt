@@ -1,0 +1,121 @@
+def encrypt_sentence(sentence):
+    #start writing your code here
+    def rearrange_consonants_vowels(word):
+        consonants = [ch for ch in word if ch.lower() not in 'aeiou']
+        vowels = [ch for ch in word if ch.lower() in 'aeiou']
+        return "".join(consonants + vowels)
+    words = sentence.split()
+    #print(words)
+    encrypted_words = []
+
+    for i, word in enumerate(words):
+        if (i + 1) % 2 == 1: 
+            encrypted_words.append(word[::-1])
+        else: 
+            encrypted_words.append(rearrange_consonants_vowels(word))
+
+    return " ".join(encrypted_words)
+sentence="The sun rises in the east"
+encrypted_sentence=encrypt_sentence(sentence)
+print(encrypted_sentence)
+
+
+
+#lex_auth_012693825794351104168
+
+def find_common_characters(msg1,msg2):
+     #Remove pass and write your logic here
+    msg1 = msg1.replace(" ", "")
+    msg2 = msg2.replace(" ", "")
+    common_chars = [char for char in msg1 if char in msg2]
+    result = "".join(dict.fromkeys(common_chars))
+    return result if result else -1
+msg1="I like Python"
+msg2="Java is a very popular language"
+common_characters=find_common_characters(msg1,msg2)
+print(common_characters)
+
+
+#lex_auth_01269444890062848087
+def find_correct(word_dict):
+    #start writing your code here
+    correct = 0
+    almost_correct = 0
+    wrong = 0
+
+    for key, value in word_dict.items():
+        if key == value:
+            correct += 1
+        elif len(key) != len(value):
+            wrong += 1
+        else:
+            mismatch_count = 0
+            for i in range(len(key)):
+                if key[i] != value[i]:
+                    mismatch_count += 1
+                    if mismatch_count > 2:
+                        break  
+        
+            if mismatch_count > 2:
+                wrong += 1
+            else:
+                almost_correct += 1
+
+    return [correct, almost_correct, wrong]
+word_dict={"THEIR": "THEIR","BUSINESS":"BISINESS","WINDOWS":"WINDMILL","WERE":"WEAR","SAMPLE":"SAMPLE"}
+print(find_correct(word_dict))
+
+
+def sms_encoding(data):
+    #start writing your code here
+    vowels = "AEIOUaeiou"
+    words = data.split()
+    encoded_words = []
+
+    for word in words:
+        consonants = "".join([char for char in word if char not in vowels])
+        encoded_words.append(consonants if consonants else word)
+
+    return " ".join(encoded_words)
+data="I love Python"
+print(sms_encoding(data))
+
+
+#lex_auth_0127382283825971201450
+
+def max_frequency_word_counter(data):
+    word=""
+    frequency=0
+    #start writing your code here
+    words = data.lower().split()  
+    word_counts = {} 
+    for w in words:
+        if w in word_counts:
+            word_counts[w] += 1
+        else:
+            word_counts[w] = 1
+    frequency = max(word_counts.values())
+    candidates = [w for w, count in word_counts.items() if count == frequency]
+    word = max(candidates, key=len)
+   # Use the below given print statements to display the output
+    # Also, do not modify them for verification to work
+    print(word,frequency)
+#Provide different values for data and test your program.
+data="Work like you do not need money, love like you have never been hurt, and dance like no one is watching"
+max_frequency_word_counter(data)
+
+
+#lex_auth_012693816757551104165
+
+def max_visited_speciality(patient_medical_speciality_list,medical_speciality):
+    # write your logic here
+    speciality_count={"P":0,"O":0,"E":0}
+    for i in range(1,len(patient_medical_speciality_list),2):
+        speciality_count[patient_medical_speciality_list[i]]+=1
+    max_speciality=max(speciality_count,key=speciality_count.get)
+    return medical_speciality[max_speciality]
+#provide different values in the list and test your program
+patient_medical_speciality_list=[301,'P',302, 'P' ,305, 'P' ,401, 'E' ,656, 'E']
+medical_speciality={"P":"Pediatrics","O":"Orthopedics","E":"ENT"}
+speciality=max_visited_speciality(patient_medical_speciality_list,medical_speciality)
+print(speciality)
